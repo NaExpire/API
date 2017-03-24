@@ -2,12 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/login", LoginHandler)
+	http.HandleFunc("/login", loginHandler)
 	http.ListenAndServe(":8000", nil)
 }
 
@@ -16,15 +17,16 @@ type loginCredentials struct {
 	Password string `json:"password"`
 }
 
-func DecodeJSON(src io.Reader, dst interface{}) error {
+func decodeJSON(src io.Reader, dst interface{}) error {
 	decoder := json.NewDecoder(src)
 	err := decoder.Decode(dst)
 	return err
 }
 
-func LoginHandler(writer http.ResponseWriter, request *http.Request) {
+func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	x := &loginCredentials{}
-	err := DecodeJSON(request.Body, x)
+	err := decodeJSON(request.Body, x)
+	fmt.Printf("Got %s request to LoginHandler\n", request.Method)
 	if request.Method != "POST" {
 		writer.WriteHeader(http.StatusMethodNotAllowed)
 	} else if err != nil {
