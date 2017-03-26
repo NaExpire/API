@@ -7,13 +7,14 @@ import (
 )
 
 type businessRegistrationCredentials struct {
-	RestaurantName string `json:"restaurantName"`
-	Address        string `json:"address"`
-	PhoneNumber    string `json:"phoneNumber"`
-	Description    string `json:"description"`
-	Email          string `json:"email"`
-	Username       string `json:"username"`
-	Password       string `json:"password"`
+	RestaurantName      string `json:"restaurantName"`
+	Address             string `json:"address"`
+	PhoneNumber         string `json:"phoneNumber"`
+	Description         string `json:"description"`
+	Email               string `json:"email"`
+	Username            string `json:"username"`
+	Password            string `json:"password"`
+	PersonalPhoneNumber string `json:"personalPhoneNumber"`
 }
 
 func businessRegistrationHandler(writer http.ResponseWriter, request *http.Request) {
