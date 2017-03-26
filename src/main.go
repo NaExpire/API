@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/NAExpire/API/src/business"
+	. "github.com/NAExpire/API/src/business"
 	"github.com/gorilla/mux"
 )
 
@@ -19,8 +19,8 @@ func main() {
 func initBusinessRouter(parent *mux.Router) {
 	businessRouter := parent.PathPrefix("/api/business").
 		Subrouter()
-	businessRouter.HandleFunc("/login/", business.BusinessLoginHandler)
-	businessRouter.HandleFunc("/register/", business.BusinessRegistrationHandler)
+	businessRouter.HandleFunc("/login/", BusinessLoginHandler)
+	businessRouter.HandleFunc("/register/", BusinessRegistrationHandler)
 }
 
 func initClientRotuer(parent *mux.Router) {
