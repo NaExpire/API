@@ -1,5 +1,5 @@
-## Reusable schema 
-### menuItem: 
+# Reusable schema 
+## menuItem: 
 ```json
 {
     "itemId": <string>,
