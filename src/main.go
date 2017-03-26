@@ -23,8 +23,10 @@ func initBusinessRouter(parent *mux.Router) {
 		Subrouter()
 
 	// e.g. /api/business/login/
-	businessRouter.HandleFunc("/login/", BusinessLoginHandler)
-	businessRouter.HandleFunc("/register/", BusinessRegistrationHandler)
+	businessRouter.HandleFunc("/login/", BusinessLoginHandler).
+		Methods("POST")
+	businessRouter.HandleFunc("/register/", BusinessRegistrationHandler).
+		Methods("POST")
 }
 
 func initClientRotuer(parent *mux.Router) {
