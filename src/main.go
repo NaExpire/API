@@ -17,8 +17,11 @@ func main() {
 }
 
 func initBusinessRouter(parent *mux.Router) {
+	// All subrouted requests will be suffixes of the URL pattern /api/business
 	businessRouter := parent.PathPrefix("/api/business").
 		Subrouter()
+
+	// e.g. /api/business/login/
 	businessRouter.HandleFunc("/login/", BusinessLoginHandler)
 	businessRouter.HandleFunc("/register/", BusinessRegistrationHandler)
 }
