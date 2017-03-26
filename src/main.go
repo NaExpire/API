@@ -3,7 +3,8 @@ package main
 import (
 	"net/http"
 
-	. "github.com/NAExpire/API/src/business"
+	. "./business"
+
 	"github.com/gorilla/mux"
 )
 
