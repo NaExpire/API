@@ -10,7 +10,7 @@
 ```
 
 ## Login
-Endpoint: POST /api/login
+Endpoint: POST /api/business/login/
 Request:
 ```json
 {
@@ -30,7 +30,7 @@ Response:
 ```
 
 ## Register
-Endpoint: POST /api/register
+Endpoint: POST /api/business/register/
 Request
 ```json
 {
@@ -56,7 +56,7 @@ Response
 ```
 
 ## Get Restaurant Details
-GET /api/restaurant/<restaurantId:string>
+GET /api/business/restaurant/<restaurantId:string>/
 Response
 ```json
 {
@@ -70,7 +70,7 @@ Response
 ```
 
 ## Get Menu
-GET /api/restaurant///menu
+GET /api/business/restaurant/<restaurantId:string>/menu/
 Response
 ```json
 {
@@ -79,4 +79,4 @@ Response
 ```
 
 ## Update Menu Item
-GET /api/restaurant/<restaurantId:string>/menu
+POST /api/business/restaurant/<restaurantId:string>/menu/<menuItemId:string>/update/
