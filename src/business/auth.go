@@ -1,4 +1,4 @@
-package main
+package business
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ type businessLoginCredentials struct {
 	Password string `json:"password"`
 }
 
-func businessLoginHandler(writer http.ResponseWriter, request *http.Request) {
+func BusinessLoginHandler(writer http.ResponseWriter, request *http.Request) {
 	x := &businessLoginCredentials{}
 	err := decodeJSON(request.Body, x)
 	fmt.Printf("Got %s request to LoginHandler\n", request.Method)

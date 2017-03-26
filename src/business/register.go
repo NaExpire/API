@@ -1,4 +1,4 @@
-package main
+package business
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ type businessRegistrationCredentials struct {
 	PersonalPhoneNumber string `json:"personalPhoneNumber"`
 }
 
-func businessRegistrationHandler(writer http.ResponseWriter, request *http.Request) {
+func BusinessRegistrationHandler(writer http.ResponseWriter, request *http.Request) {
 	x := &businessRegistrationCredentials{}
 	err := decodeJSON(request.Body, x)
 	fmt.Printf("Got %s request to BusinessRegistrationHandler\n", request.Method)

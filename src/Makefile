@@ -15,3 +15,6 @@ build:
 	go build -o API
 run:
 	./API
+
+docker:
+	docker build -t naexpire-api .
