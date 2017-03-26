@@ -70,7 +70,7 @@ Response
 ```
 
 ## Get Menu
-GET /api/business/restaurant/<restaurantId:string>/menu/
+GET /api/business/restaurant/<restaurantId:string>/menu/<menuItemId:string>/
 Response
 ```json
 {
