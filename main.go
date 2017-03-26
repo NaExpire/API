@@ -22,7 +22,11 @@ func initBusinessRouter(parent *mux.Router) {
 		Subrouter()
 	businessRouter.HandleFunc("/login/", businessLoginHandler)
 	businessRouter.HandleFunc("/register/", businessRegistrationHandler)
+}
 
+func initClientRotuer(parent *mux.Router) {
+	// clientRouter := parent.PathPrefix("/api/client").
+	// 	Subrouter()
 }
 
 func decodeJSON(src io.Reader, dst interface{}) error {
