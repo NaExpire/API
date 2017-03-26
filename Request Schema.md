@@ -2,6 +2,7 @@
 ### menuItem: 
 ```json
 {
+    "itemId": <string>,
     "name": <string>,
     "price": <string>,
     "description": <string>
@@ -42,6 +43,7 @@ Request
     "personalPhoneNumber": <string>,
     "password": <string>,
     "foodTypes": [<string>...],
+    "restaurantId": <string>,
     optional "menuItems": [<menuItem> ...]
 }
 ```
@@ -62,15 +64,19 @@ Response
     "address": <string>,
     "phoneNumber": <string>,
     "description": <string>,
+    "restaurantId": <string>,
     "foodTypes": [<string>...]
 }
 ```
 
 ## Get Menu
-GET /api/restaurant/<restaurantId:string>/menu
+GET /api/restaurant///menu
 Response
 ```json
 {
     "menuItems": [<menuItem> ...]
 }
 ```
+
+## Update Menu Item
+GET /api/restaurant/<restaurantId:string>/menu
