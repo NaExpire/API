@@ -7,8 +7,9 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/register_business", businessRegistrationHandler)
+	http.HandleFunc("/business/login", loginHandler)
+	http.HandleFunc("/business/register", businessRegistrationHandler)
+	http.HandleFunc("/business/")
 	http.ListenAndServe(":8000", nil)
 }
 
