@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-
 	"github.com/gorilla/mux"
 )
 
@@ -21,6 +20,8 @@ func initBusinessRouter(parent *mux.Router) {
 	businessRouter := parent.PathPrefix("/api/business").
 		Subrouter()
 	businessRouter.HandleFunc("/login/", businessLoginHandler)
+	businessRouter.HandleFunc("/register/", businessRegistrationHandler)
+	
 }
 
 func decodeJSON(src io.Reader, dst interface{}) error {
