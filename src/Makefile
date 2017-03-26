@@ -16,5 +16,8 @@ build:
 run:
 	./API
 
-docker:
+docker-build:
 	docker build -t naexpire-api .
+
+docker-run:
+	docker run -i -t -p 8000:8000 naexpire-api
