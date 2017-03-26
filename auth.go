@@ -6,13 +6,13 @@ import (
 	"net/http"
 )
 
-type loginCredentials struct {
-	Email    string `json:"email"`
+type businessLoginCredentials struct {
+	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-func loginHandler(writer http.ResponseWriter, request *http.Request) {
-	x := &loginCredentials{}
+func businessLoginHandler(writer http.ResponseWriter, request *http.Request) {
+	x := &businessLoginCredentials{}
 	err := decodeJSON(request.Body, x)
 	fmt.Printf("Got %s request to LoginHandler\n", request.Method)
 	if request.Method != "POST" {
@@ -20,7 +20,7 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	} else if err != nil {
 		io.WriteString(writer, err.Error()+"\n")
 	} else {
-		io.WriteString(writer, x.Email+"\n")
+		io.WriteString(writer, x.Username+"\n")
 		io.WriteString(writer, x.Password+"\n")
 	}
 }
