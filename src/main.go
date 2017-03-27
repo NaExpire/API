@@ -25,9 +25,14 @@ func initBusinessRouter(parent *mux.Router) {
 	// e.g. /api/business/login/
 	businessRouter.HandleFunc("/login/", BusinessLoginHandler)
 	businessRouter.HandleFunc("/register/", BusinessRegistrationHandler)
+	businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
+	businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler)
+	businessRouter.HandleFunc("/restaurant/{restaurantID}", RestaurantGetHandler)
+	businessRouter.HandleFunc("/restaurant/{restaurantID}/update/", RestaurantUpdateHandler)
+	businessRouter.HandleFunc("/discount/create/{restaurantID}/{menuItemID}", DiscountCreateHandler)
 }
 
 func initClientRotuer(parent *mux.Router) {
 	// clientRouter := parent.PathPrefix("/api/client").
-	// 	Subrouter()
+	// Subrouter()
 }
