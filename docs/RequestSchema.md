@@ -80,3 +80,17 @@ Response
 
 ## Update Menu Item
 POST /api/business/restaurant/<restaurantId:string>/menu/<menuItemId:string>/update/
+Request
+```json
+{
+    "name": <string>,
+    "price": <string>,
+    "description": <string>
+}
+```
+Response
+```json
+{
+    "ok": <boolean>
+}
+```
