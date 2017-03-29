@@ -7,7 +7,7 @@ get-glide:
 	curl https://glide.sh/get | sh
 
 install-deps:
-	glide up
+	glide install
 
 clean:
 	rm API
