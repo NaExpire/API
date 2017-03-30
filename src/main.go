@@ -3,29 +3,47 @@ package main
 import (
 	"net/http"
 
-	. "./business"
+	"database/sql"
+
+	_ "github.com/go-sql-driver/mysql"
+
+	"./business"
 
 	"github.com/gorilla/mux"
 )
 
 func main() {
+	// Initialize connection to DB
+	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/naexpire?parseTime=true&charset=utf8")
+	panicOnErr(err)
+	err = db.Ping()
+	panicOnErr(err)
+
+	// Initialize request routing
 	apiRouter := mux.NewRouter().
 		StrictSlash(false)
+	initBusinessRouter(apiRouter, db)
+	initClientRotuer(apiRouter)
 
-	initBusinessRouter(apiRouter)
-
+	// Listen for incoming connections on port 8000
 	http.ListenAndServe(":8000", apiRouter)
 }
 
-func initBusinessRouter(parent *mux.Router) {
+func panicOnErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 	// All subrouted requests will be suffixes of the URL pattern /api/business
 	businessRouter := parent.PathPrefix("/api/business").
 		Subrouter()
 
 	// e.g. /api/business/login/
-	businessRouter.HandleFunc("/login/", BusinessLoginHandler).
+	businessRouter.HandleFunc("/login/", business.BusinessLoginHandler).
 		Methods("POST")
-	businessRouter.HandleFunc("/register/", BusinessRegistrationHandler).
+	businessRouter.Handle("/register/", business.RegistrationHandler{DB: db}).
 		Methods("POST")
 	businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
 	businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler).
