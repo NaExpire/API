@@ -34,17 +34,19 @@ Endpoint: POST /api/business/register/
 Request
 ```json
 {
-    "name": <string>,
-    "address": <string>,
-    "phoneNumber": <string>,
-    "username": <string>,
-    "description": <string>,
+    "firstName": <string>,
+    "lastName": <string>,
     "email": <string>,
-    "personalPhoneNumber": <string>,
     "password": <string>,
-    "foodTypes": [<string>...],
-    "restaurantId": <string>,
-    optional "menuItems": [<menuItem> ...]
+    "personalPhoneNumber": <string>,
+    "restaurantName": <string>,
+    "addressLine1": <string>,
+    "addressLine2": <string>,
+    "city": <string>,
+    "state": <string>,
+    "zip": <string>,
+    "businessPhoneNumber": <string>,
+    "description": <string>
 }
 ```
 
