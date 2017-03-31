@@ -9,12 +9,14 @@ import (
 
 	"./business"
 
+	"fmt"
+
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	// Initialize connection to DB
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/naexpire?parseTime=true&charset=utf8")
+	db, err := sql.Open("mysql", "root:root@tcp(138.197.33.88:3306)/naexpire?parseTime=true&charset=utf8")
 	panicOnErr(err)
 	err = db.Ping()
 	panicOnErr(err)
@@ -31,6 +33,7 @@ func main() {
 
 func panicOnErr(err error) {
 	if err != nil {
+		fmt.Errorf("%s", err.Error())
 		panic(err)
 	}
 }
