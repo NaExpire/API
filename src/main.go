@@ -45,14 +45,14 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Methods("POST")
 	businessRouter.Handle("/register/", business.RegistrationHandler{DB: db}).
 		Methods("POST")
-	businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
-	businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler).
-		Methods("POST")
-	businessRouter.HandleFunc("/restaurant/{restaurantID}", RestaurantGetHandler)
-	businessRouter.HandleFunc("/restaurant/{restaurantID}/update/", RestaurantUpdateHandler).
-		Methods("POST")
-	businessRouter.HandleFunc("/discount/create/{restaurantID}/{menuItemID}", DiscountCreateHandler).
-		Methods("POST")
+	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
+	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler).
+	// 	Methods("POST")
+	// businessRouter.HandleFunc("/restaurant/{restaurantID}", RestaurantGetHandler)
+	// businessRouter.HandleFunc("/restaurant/{restaurantID}/update/", RestaurantUpdateHandler).
+	// 	Methods("POST")
+	// businessRouter.HandleFunc("/discount/create/{restaurantID}/{menuItemID}", DiscountCreateHandler).
+	// 	Methods("POST")
 }
 
 func initClientRotuer(parent *mux.Router) {
