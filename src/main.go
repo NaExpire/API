@@ -33,7 +33,7 @@ func main() {
 
 func panicOnErr(err error) {
 	if err != nil {
-		fmt.Errorf("%s", err.Error())
+		fmt.Printf("%s", err.Error())
 		panic(err)
 	}
 }
