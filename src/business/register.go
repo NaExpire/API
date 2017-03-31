@@ -12,9 +12,6 @@ type RegistrationHandler struct {
 	DB *sql.DB
 }
 
-type restaurantDetails struct {
-}
-
 type businessRegistrationCredentials struct {
 	FirstName           string `json:"firstName"`
 	LastName            string `json:"lastName"`
@@ -48,7 +45,7 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 		return
 	}
 
-	for rows.Next() {
+	if rows.Next() {
 		writer.WriteHeader(http.StatusConflict)
 		io.WriteString(writer, "Email is already in use\n")
 		return
