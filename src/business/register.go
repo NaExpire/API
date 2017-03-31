@@ -1,11 +1,10 @@
 package business
 
 import (
+	"database/sql"
 	"io"
 	"net/http"
 	"time"
-
-	"database/sql"
 )
 
 type RegistrationHandler struct {
@@ -51,9 +50,22 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO users (email, password, firstname, lastname, `registration-date`) VALUES (?, ?, ?, ?, ?)", x.Email, x.Password, x.FirstName, x.LastName, time.Now())
+	registrationDate := time.Now()
+
+	result, err := handler.DB.Exec("INSERT INTO users (email, password, firstname, lastname, `registration-date`) VALUES (?, ?, ?, ?, ?)", x.Email, x.Password, x.FirstName, x.LastName, registrationDate)
 	if err != nil {
 		io.WriteString(writer, err.Error()+"\n")
 		return
 	}
+
+	lastID, _ := result.LastInsertId()
+
+	_, err = handler.DB.Exec("INSERT INTO restaurants (ownerid, name, description, address, city, state, zip, `registration-date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", lastID, x.RestaurantName, x.Description, x.AddressLine1+"\n"+x.AddressLine2, x.City, x.State, x.Zip, registrationDate)
+
+	if err != nil {
+		io.WriteString(writer, err.Error()+"\n")
+		return
+	}
+
+	io.WriteString(writer, "{\"ok\": true}")
 }
