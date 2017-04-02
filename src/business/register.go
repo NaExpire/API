@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type RegistrationHandler struct {
@@ -51,8 +53,10 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 	}
 
 	registrationDate := time.Now()
+	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(x.Password), 14)
 
-	result, err := handler.DB.Exec("INSERT INTO users (email, password, firstname, lastname, `registration-date`) VALUES (?, ?, ?, ?, ?)", x.Email, x.Password, x.FirstName, x.LastName, registrationDate)
+	result, err := handler.DB.Exec("INSERT INTO users (email, password, firstname, lastname, `registration-date`) VALUES (?, ?, ?, ?, ?)", x.Email, string(passwordHash), x.FirstName, x.LastName, registrationDate)
+
 	if err != nil {
 		io.WriteString(writer, err.Error()+"\n")
 		return
