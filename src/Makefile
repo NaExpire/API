@@ -12,7 +12,7 @@ install-deps:
 clean:
 	rm API
 build:
-	go build main.go -o API
+	go build -o API main.go
 run:
 	./API
 
