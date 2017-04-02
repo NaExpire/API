@@ -10,6 +10,7 @@ godoc fmt Printf         # documentation for fmt.Printf
 godoc cmd/go             # force documentation for the go command
 godoc -src fmt           # fmt package interface in Go source form
 godoc -src fmt Printf    # implementation of fmt.Printf
+
 In command-line mode, the -q flag enables search queries against a godoc running as a webserver. If no explicit server address is specified with the -server flag, godoc first tries localhost:6060 and then http://golang.org.
 
 godoc -q Reader
