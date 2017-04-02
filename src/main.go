@@ -44,7 +44,7 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Subrouter()
 
 	// e.g. /api/business/login/
-	businessRouter.HandleFunc("/login/", business.BusinessLoginHandler).
+	businessRouter.HandleFunc("/login/", business.AuthHandler).
 		Methods("POST")
 	businessRouter.Handle("/register/", business.RegistrationHandler{DB: db}).
 		Methods("POST")
