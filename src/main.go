@@ -5,9 +5,9 @@ import (
 
 	"database/sql"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/NAExpire/API/src/business"
 
-	"./business"
+	_ "github.com/go-sql-driver/mysql"
 
 	"fmt"
 
