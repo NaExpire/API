@@ -7,7 +7,7 @@ get-glide:
 	curl https://glide.sh/get | sh
 
 install-deps:
-	glide install
+	glide update && glide install
 
 clean:
 	rm API
@@ -17,6 +17,7 @@ run:
 	./API
 
 docker-build:
+	make install-deps
 	docker build -t naexpire-api .
 
 docker-run:
