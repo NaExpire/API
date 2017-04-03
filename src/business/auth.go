@@ -19,7 +19,7 @@ type businessLoginCredentials struct {
 	Password string `json:"password"`
 }
 
-func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (handler AuthHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	x := &businessLoginCredentials{}
 	err := decodeJSON(request.Body, x)
 	fmt.Printf("Got %s request to LoginHandler\n", request.Method)
@@ -45,7 +45,7 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 
 	if rows.Next() {
 		io.WriteString(writer, "Congratulations, you have logged in.")
-		result, err := handler.DB.Exec("INSERT INTO users (`last-login`) VALUES (?)", time.Now())
+		_, err = handler.DB.Exec("INSERT INTO users (`last-login`) VALUES (?)", time.Now())
 	} else {
 		writer.WriteHeader(http.StatusConflict)
 		io.WriteString(writer, "Email or password is incorrect\n")

@@ -1,7 +1,8 @@
 FROM golang:1.7.5
 
-RUN mkdir -p $GOPATH/src/app
-ADD . $GOPATH/src/app
-WORKDIR $GOPATH/src/app
-RUN go build -o main main.go
-CMD ["/go/src/app/main"]
+RUN mkdir -p /app
+RUN mkdir -p $GOPATH/src/github.com/NAExpire/API/src
+ADD . $GOPATH/src/github.com/NAExpire/API/src
+WORKDIR $GOPATH/src/github.com/NAExpire/API/src
+RUN go build -o /app/API main.go
+CMD ["/app/API"]
