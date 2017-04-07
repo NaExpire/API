@@ -44,6 +44,7 @@ func (handler AuthHandler) ServeHTTP(writer http.ResponseWriter, request *http.R
 	}
 
 	if rows.Next() {
+		// issue session
 		io.WriteString(writer, "Congratulations, you have logged in.")
 		_, err = handler.DB.Exec("INSERT INTO users (`last-login`) VALUES (?)", time.Now())
 	} else {

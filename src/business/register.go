@@ -52,6 +52,8 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 		return
 	}
 
+	// validate phone and address
+
 	registrationDate := time.Now()
 	passwordHash, _ := bcrypt.GenerateFromPassword([]byte(x.Password), 14)
 
