@@ -66,18 +66,22 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 	if !validatePassword(x.Password) {
 		writer.WriteHeader(http.StatusUnprocessableEntity)
 		io.WriteString(writer, "Password does not pass validation")
+		return
 	}
 	if !validatePhoneNumber(x.BusinessPhoneNumber) {
 		writer.WriteHeader(http.StatusUnprocessableEntity)
 		io.WriteString(writer, "Phone number does not pass validation")
+		return
 	}
 	emailValidated, err := validateEmail(x.Email, confirmationCode)
 	if !emailValidated {
 		writer.WriteHeader(http.StatusUnprocessableEntity)
 		io.WriteString(writer, "Email is not valid")
+		return
 	} else if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(writer, "Could not send confirmation email")
+		return
 	}
 
 	registrationDate := time.Now()
@@ -108,7 +112,7 @@ func randomConfirmationCode() int {
 }
 
 func validatePassword(password string) bool {
-	return true
+	return len(password) > 7
 }
 
 func validatePhoneNumber(phoneNumber string) bool {
