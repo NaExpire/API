@@ -18,19 +18,28 @@ type confirmBusinessRegistrationCredentials struct {
 func (handler ConfirmRegistrationHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	x := &confirmBusinessRegistrationCredentials{}
 	rows, err := handler.DB.Query("SELECT `confirmation-code` FROM `users` WHERE `email` = ?", x.emailAddress)
-	defer rows.Close()
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(writer, err.Error()+"\n")
 		return
 	}
+	defer rows.Close()
 	var confirmationCode int
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(writer, err.Error()+"\n")
 		return
 	}
-	rows.Scan(&confirmationCode)
+	if !rows.Next() {
+		io.WriteString(writer, "{\"ok\": false}")
+		return
+	}
+	err = rows.Scan(&confirmationCode)
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(writer, err.Error()+"\n")
+		return
+	}
 	if confirmationCode == x.confirmationCode {
 		io.WriteString(writer, "{\"ok\": true}")
 	} else {
