@@ -17,6 +17,7 @@ type confirmBusinessRegistrationCredentials struct {
 
 func (handler ConfirmRegistrationHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	x := &confirmBusinessRegistrationCredentials{}
+	decodeJSON(request.Body, x)
 	rows, err := handler.DB.Query("SELECT `confirmation-code` FROM `users` WHERE `email` = ?", x.EmailAddress)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
