@@ -48,6 +48,8 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Methods("POST")
 	businessRouter.Handle("/register/", business.RegistrationHandler{DB: db}).
 		Methods("POST")
+	businessRouter.Handle("/register/confirm/", business.ConfirmRegistrationHandler{DB: db}).
+		Methods("POST")
 	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
 	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler).
 	// 	Methods("POST")
