@@ -40,8 +40,14 @@ type businessRegistrationCredentials struct {
 
 func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	x := &businessRegistrationCredentials{}
-	err := decodeJSON(request.Body, x)
-	if err != nil {
+	var err error
+	if request.Header.Get("Content-Type") == "application/json" {
+		err = decodeJSON(request.Body, x)
+	} else {
+		err := decodeBusinessRegistrationForm(x, request)
+	}
+
+	if err == nil {
 		io.WriteString(writer, err.Error()+"\n")
 		return
 	}
@@ -104,6 +110,24 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 	}
 
 	io.WriteString(writer, "{\"ok\": true}")
+}
+
+func decodeBusinessRegistrationForm(x *businessRegistrationCredentials, request *http.Request) error {
+	request.ParseForm()
+	x.FirstName = request.PostFormValue("firstName")
+	x.LastName = request.PostFormValue("lastName")
+	x.Email = request.PostFormValue("email")
+	x.Password = request.PostFormValue("password")
+	x.PersonalPhoneNumber = request.PostFormValue("personalPhoneNumber")
+	x.RestaurantName = request.PostFormValue("restaurantName")
+	x.AddressLine1 = request.PostFormValue("addressLine1")
+	x.AddressLine2 = request.PostFormValue("addressLine2")
+	x.City = request.PostFormValue("city")
+	x.State = request.PostFormValue("state")
+	x.Zip = request.PostFormValue("zip")
+	x.BusinessPhoneNumber = request.PostFormValue("businessPhoneNumber")
+	x.Description = request.PostFormValue("description")
+	return nil
 }
 
 func randomConfirmationCode() int {
