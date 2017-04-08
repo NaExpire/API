@@ -47,7 +47,7 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 		err = decodeBusinessRegistrationForm(x, request)
 	}
 
-	if err == nil {
+	if err != nil {
 		io.WriteString(writer, err.Error()+"\n")
 		return
 	}
