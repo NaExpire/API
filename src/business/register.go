@@ -6,8 +6,6 @@ import (
 	"math/rand"
 	"net/http"
 	"net/mail"
-	"net/smtp"
-	"strconv"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
@@ -148,14 +146,14 @@ func validateEmail(email string, confirmationCode int) (bool, error) {
 	if err != nil {
 		return false, nil
 	}
-	auth := smtp.PlainAuth("", senderEmail, senderPassword, "smtp.gmail.com")
-	msg := "From: " + senderEmail + "\n" +
-		"To: " + email + "\n" +
-		"Subject: NAExpire Registration\n\n" +
-		"Hello! Your confirmation code is " + strconv.Itoa(confirmationCode) + "."
-	err = smtp.SendMail(smtpHost+":"+strconv.Itoa(smtpPort), auth, senderEmail, []string{email}, []byte(msg))
-	if err != nil {
-		return true, err
-	}
+	// auth := smtp.PlainAuth("", senderEmail, senderPassword, "smtp.gmail.com")
+	// msg := "From: " + senderEmail + "\n" +
+	// 	"To: " + email + "\n" +
+	// 	"Subject: NAExpire Registration\n\n" +
+	// 	"Hello! Your confirmation code is " + strconv.Itoa(confirmationCode) + "."
+	// err = smtp.SendMail(smtpHost+":"+strconv.Itoa(smtpPort), auth, senderEmail, []string{email}, []byte(msg))
+	// if err != nil {
+	// 	return true, err
+	// }
 	return true, nil
 }
