@@ -44,7 +44,7 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 	if request.Header.Get("Content-Type") == "application/json" {
 		err = decodeJSON(request.Body, x)
 	} else {
-		err := decodeBusinessRegistrationForm(x, request)
+		err = decodeBusinessRegistrationForm(x, request)
 	}
 
 	if err == nil {
