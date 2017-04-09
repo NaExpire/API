@@ -55,6 +55,7 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 		}
 		if bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(x.Password)) == nil {
 			if confirmed == 0 {
+				writer.WriteHeader(http.StatusForbidden)
 				io.WriteString(writer, "Email has not been confirmed yet\n")
 			} else {
 				myUniqueSessionID := seshin.GenerateSessionID()
@@ -69,12 +70,10 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 		} else {
 			writer.WriteHeader(http.StatusConflict)
 			io.WriteString(writer, "{\"ok\": false}")
-			return
 		}
 	} else {
 		writer.WriteHeader(http.StatusConflict)
 		io.WriteString(writer, "{\"ok\": false}")
-		return
 	}
 }
 
