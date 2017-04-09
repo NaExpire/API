@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 
+	"strconv"
+
 	"github.com/NAExpire/API/src/util"
 )
 
@@ -13,7 +15,7 @@ type ConfirmRegistrationHandler struct {
 }
 
 type confirmBusinessRegistrationCredentials struct {
-	ConfirmationCode int    `json:"confirmationCode"`
+	ConfirmationCode string `json:"confirmationCode"`
 	EmailAddress     string `json:"emailAddress"`
 }
 
@@ -43,8 +45,14 @@ func (handler ConfirmRegistrationHandler) ServeHTTP(writer http.ResponseWriter, 
 		io.WriteString(writer, err.Error()+"\n")
 		return
 	}
-	if confirmationCode == x.ConfirmationCode {
+	if strconv.Itoa(confirmationCode) == x.ConfirmationCode {
 		io.WriteString(writer, "{\"ok\": true}")
+		_, err := handler.DB.Exec("UPDATE `users` SET `confirmed` = ? WHERE `email` = ?", 1, x.EmailAddress)
+		if err != nil {
+			writer.WriteHeader(http.StatusInternalServerError)
+			io.WriteString(writer, err.Error()+"\n")
+			return
+		}
 	} else {
 		io.WriteString(writer, "{\"ok\": false}")
 	}
