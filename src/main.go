@@ -47,7 +47,7 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 	businessRouter.Handle("/login/", business.LoginHandler{DB: db}).
 		Methods("POST")
 	businessRouter.Handle("/logout/", business.LogoutHandler{DB: db}).
-		Methods("GET")
+		Methods("POST")
 	businessRouter.Handle("/register/", business.RegistrationHandler{DB: db}).
 		Methods("POST")
 	businessRouter.Handle("/register/confirm/", business.ConfirmRegistrationHandler{DB: db}).
