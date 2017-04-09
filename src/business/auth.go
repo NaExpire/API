@@ -47,8 +47,8 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	}
 
 	if rows.Next() {
-		passwordHash := ""
-		confirmed := 0
+		var passwordHash string
+		var confirmed int
 		err := rows.Scan(&passwordHash, &confirmed)
 		if err != nil {
 			io.WriteString(writer, err.Error()+"\n")
@@ -68,11 +68,11 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 				io.WriteString(writer, responseBody)
 			}
 		} else {
-			writer.WriteHeader(http.StatusConflict)
+			writer.WriteHeader(http.StatusUnauthorized)
 			io.WriteString(writer, "{\"ok\": false}")
 		}
 	} else {
-		writer.WriteHeader(http.StatusConflict)
+		writer.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(writer, "{\"ok\": false}")
 	}
 }
