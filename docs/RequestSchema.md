@@ -57,6 +57,23 @@ Response
 }
 ```
 
+## Confirm Registration
+Endpoint: POST /api/business/register/confirm/
+Request
+```json
+{
+    "emailAddress": <string>,
+    "confirmationCode": <string>
+}
+```
+
+Response
+```json
+{
+    "ok": <boolean>
+}
+```
+
 ## Get Restaurant Details
 GET /api/business/restaurant/<restaurantId:string>/
 Response
