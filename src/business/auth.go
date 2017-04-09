@@ -53,29 +53,27 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 		if err != nil {
 			io.WriteString(writer, err.Error()+"\n")
 		}
-
-		fmt.Printf("passwordHash: %s\n", passwordHash)
-
 		if bcrypt.CompareHashAndPassword([]byte(passwordHash), []byte(x.Password)) == nil {
 			if confirmed == 0 {
 				io.WriteString(writer, "Email has not been confirmed yet\n")
 			} else {
 				myUniqueSessionID := seshin.GenerateSessionID()
+				fmt.Printf("myUniqueSessionID: %s\n", myUniqueSessionID)
 				seshin.CreateSession(handler.DB, myUniqueSessionID)
 				_, err = handler.DB.Exec("INSERT INTO users (`last-login`) VALUES (?)", time.Now())
 
 				writer.WriteHeader(http.StatusOK)
-				writer.Header().Add("session", myUniqueSessionID)
-				io.WriteString(writer, "{\"ok\": true}")
+				responseBody := "{\"ok\": true,\"sessionID\": " + myUniqueSessionID + "}"
+				io.WriteString(writer, responseBody)
 			}
 		} else {
 			writer.WriteHeader(http.StatusConflict)
-			io.WriteString(writer, "Email or password is incorrect!\n")
+			io.WriteString(writer, "{\"ok\": false}")
 			return
 		}
 	} else {
 		writer.WriteHeader(http.StatusConflict)
-		io.WriteString(writer, "Email or password is incorrect\n")
+		io.WriteString(writer, "{\"ok\": false}")
 		return
 	}
 }
