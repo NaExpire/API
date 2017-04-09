@@ -8,6 +8,7 @@ import (
 	"net/mail"
 	"time"
 
+	"github.com/NAExpire/API/src/util"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -40,7 +41,7 @@ func (handler RegistrationHandler) ServeHTTP(writer http.ResponseWriter, request
 	x := &businessRegistrationCredentials{}
 	var err error
 	if request.Header.Get("Content-Type") == "application/json" {
-		err = decodeJSON(request.Body, x)
+		err = util.DecodeJSON(request.Body, x)
 	} else {
 		err = decodeBusinessRegistrationForm(x, request)
 	}
