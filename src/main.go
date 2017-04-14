@@ -67,10 +67,10 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 	consumerRouter := parent.PathPrefix("/api/consumer").
 		Subrouter()
 
-	// consumerRouter.Handle("/login/", business.LoginHandler{DB: db}).
-	// Methods("POST")
-	// consumerRouter.Handle("/logout/", business.LogoutHandler{DB: db}).
-	// Methods("POST")
+	consumerRouter.Handle("/login/", consumer.LoginHandler{DB: db}).
+		Methods("POST")
+	consumerRouter.Handle("/logout/", consumer.LogoutHandler{DB: db}).
+		Methods("POST")
 	consumerRouter.Handle("/register/", consumer.RegistrationHandler{DB: db}).
 		Methods("POST")
 	consumerRouter.Handle("/register/confirm/", consumer.ConfirmRegistrationHandler{DB: db}).
