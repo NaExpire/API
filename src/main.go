@@ -6,6 +6,7 @@ import (
 	"database/sql"
 
 	"github.com/NAExpire/API/src/business"
+	"github.com/NAExpire/API/src/consumer"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -25,7 +26,7 @@ func main() {
 	apiRouter := mux.NewRouter().
 		StrictSlash(false)
 	initBusinessRouter(apiRouter, db)
-	initClientRotuer(apiRouter)
+	initConsumerRotuer(apiRouter, db)
 
 	// Listen for incoming connections on port 8000
 	http.ListenAndServe(":8000", apiRouter)
@@ -62,7 +63,16 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 	// 	Methods("POST")
 }
 
-func initClientRotuer(parent *mux.Router) {
-	// clientRouter := parent.PathPrefix("/api/client").
-	// Subrouter()
+func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
+	consumerRouter := parent.PathPrefix("/api/consumer").
+		Subrouter()
+
+	// consumerRouter.Handle("/login/", business.LoginHandler{DB: db}).
+	// Methods("POST")
+	// consumerRouter.Handle("/logout/", business.LogoutHandler{DB: db}).
+	// Methods("POST")
+	consumerRouter.Handle("/register/", consumer.RegistrationHandler{DB: db}).
+		Methods("POST")
+	consumerRouter.Handle("/register/confirm/", consumer.ConfirmRegistrationHandler{DB: db}).
+		Methods("POST")
 }
