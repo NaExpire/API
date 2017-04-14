@@ -7,7 +7,6 @@ import (
 
 	"github.com/NAExpire/API/src/business"
 	"github.com/NAExpire/API/src/consumer"
-
 	_ "github.com/go-sql-driver/mysql"
 
 	"fmt"
@@ -56,9 +55,10 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
 	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler).
 	// 	Methods("POST")
-	// businessRouter.HandleFunc("/restaurant/{restaurantID}", RestaurantGetHandler)
-	// businessRouter.HandleFunc("/restaurant/{restaurantID}/update/", RestaurantUpdateHandler).
-	// 	Methods("POST")
+	businessRouter.Handle("/restaurant/{restaurantID}/", GetRestaurantHandler{DB: db}).
+		Methods("GET")
+	businessRouter.Handle("/restaurant/{restaurantID}/update/", UpdateRestaurantHandler{DB: db}).
+		Methods("POST")
 	// businessRouter.HandleFunc("/discount/create/{restaurantID}/{menuItemID}", DiscountCreateHandler).
 	// 	Methods("POST")
 }
@@ -75,4 +75,8 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 		Methods("POST")
 	consumerRouter.Handle("/register/confirm/", consumer.ConfirmRegistrationHandler{DB: db}).
 		Methods("POST")
+	consumerRouter.Handle("/restaurant/{restaurantID}/update/", UpdateRestaurantHandler{DB: db}).
+		Methods("POST")
+	consumerRouter.Handle("/restaurant/{restaurantID}/", GetRestaurantHandler{DB: db}).
+		Methods("GET")
 }

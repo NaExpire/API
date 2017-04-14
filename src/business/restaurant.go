@@ -62,6 +62,6 @@ func MenuUpdateHandler(writer http.ResponseWriter, request *http.Request) {
 	} else if err != nil {
 		io.WriteString(writer, err.Error()+"\n")
 	} else {
-
+		
 	}
 }
