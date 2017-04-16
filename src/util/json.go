@@ -22,6 +22,6 @@ func EncodeJSON(dst io.Writer, src interface{}) error {
 func WriteErrorJSON(dst io.Writer, errorMsg string) error {
 	response := make(map[string]interface{})
 	response["ok"] = false
-	response["failureReason"] = "Request does not have the header \"Content-Type: application-json\""
+	response["failureReason"] = errorMsg
 	return EncodeJSON(dst, response)
 }
