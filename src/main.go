@@ -5,8 +5,6 @@ import (
 
 	"database/sql"
 
-	"github.com/NAExpire/API/src/business"
-	"github.com/NAExpire/API/src/consumer"
 	_ "github.com/go-sql-driver/mysql"
 
 	"fmt"
@@ -44,13 +42,13 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Subrouter()
 
 	// e.g. /api/business/login/
-	businessRouter.Handle("/login/", business.LoginHandler{DB: db}).
+	businessRouter.Handle("/login/", LoginHandler{DB: db}).
 		Methods("POST")
-	businessRouter.Handle("/logout/", business.LogoutHandler{DB: db}).
+	businessRouter.Handle("/logout/", LogoutHandler{DB: db}).
 		Methods("POST")
-	businessRouter.Handle("/register/", business.RegistrationHandler{DB: db}).
+	businessRouter.Handle("/register/", BusinessRegistrationHandler{DB: db}).
 		Methods("POST")
-	businessRouter.Handle("/register/confirm/", business.ConfirmRegistrationHandler{DB: db}).
+	businessRouter.Handle("/register/confirm/", ConfirmRegistrationHandler{DB: db}).
 		Methods("POST")
 	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
 	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler).
@@ -67,13 +65,13 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 	consumerRouter := parent.PathPrefix("/api/consumer").
 		Subrouter()
 
-	consumerRouter.Handle("/login/", consumer.LoginHandler{DB: db}).
+	consumerRouter.Handle("/login/", LoginHandler{DB: db}).
 		Methods("POST")
-	consumerRouter.Handle("/logout/", consumer.LogoutHandler{DB: db}).
+	consumerRouter.Handle("/logout/", LogoutHandler{DB: db}).
 		Methods("POST")
-	consumerRouter.Handle("/register/", consumer.RegistrationHandler{DB: db}).
+	consumerRouter.Handle("/register/", ConsumerRegistrationHandler{DB: db}).
 		Methods("POST")
-	consumerRouter.Handle("/register/confirm/", consumer.ConfirmRegistrationHandler{DB: db}).
+	consumerRouter.Handle("/register/confirm/", ConfirmRegistrationHandler{DB: db}).
 		Methods("POST")
 	consumerRouter.Handle("/restaurant/{restaurantID}/update/", UpdateRestaurantHandler{DB: db}).
 		Methods("POST")
