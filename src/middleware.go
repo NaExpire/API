@@ -16,7 +16,7 @@ func Chain(h http.Handler, middlewares ...Middleware) http.Handler {
 	return h
 }
 
-func AllowCORS(h http.Handler) Middleware {
+func AllowCORS() Middleware {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Add("Access-Control-Allow-Origin", "*")
@@ -25,7 +25,7 @@ func AllowCORS(h http.Handler) Middleware {
 	}
 }
 
-func DetectJsonContentType(h http.Handler) Middleware {
+func DetectJsonContentType() Middleware {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			contentType := r.Header.Get("Content-Type")

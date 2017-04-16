@@ -42,20 +42,20 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Subrouter()
 
 	// e.g. /api/business/login/
-	businessRouter.Handle("/login/", LoginHandler{DB: db}).
+	businessRouter.Handle("/login/", Chain(LoginHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	businessRouter.Handle("/logout/", LogoutHandler{DB: db}).
+	businessRouter.Handle("/logout/", Chain(LogoutHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	businessRouter.Handle("/register/", BusinessRegistrationHandler{DB: db}).
+	businessRouter.Handle("/register/", Chain(BusinessRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	businessRouter.Handle("/register/confirm/", ConfirmRegistrationHandler{DB: db}).
+	businessRouter.Handle("/register/confirm/", Chain(ConfirmRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
 	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
 	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler).
 	// 	Methods("POST")
-	businessRouter.Handle("/restaurant/{restaurantID}/", GetRestaurantHandler{DB: db}).
+	businessRouter.Handle("/restaurant/{restaurantID}/", Chain(GetRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("GET")
-	businessRouter.Handle("/restaurant/{restaurantID}/update/", UpdateRestaurantHandler{DB: db}).
+	businessRouter.Handle("/restaurant/{restaurantID}/update/", Chain(UpdateRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("POST")
 	// businessRouter.HandleFunc("/discount/create/{restaurantID}/{menuItemID}", DiscountCreateHandler).
 	// 	Methods("POST")
@@ -65,16 +65,16 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 	consumerRouter := parent.PathPrefix("/api/consumer").
 		Subrouter()
 
-	consumerRouter.Handle("/login/", LoginHandler{DB: db}).
+	consumerRouter.Handle("/login/", Chain(LoginHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	consumerRouter.Handle("/logout/", LogoutHandler{DB: db}).
+	consumerRouter.Handle("/logout/", Chain(LogoutHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	consumerRouter.Handle("/register/", ConsumerRegistrationHandler{DB: db}).
+	consumerRouter.Handle("/register/", Chain(ConsumerRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	consumerRouter.Handle("/register/confirm/", ConfirmRegistrationHandler{DB: db}).
+	consumerRouter.Handle("/register/confirm/", Chain(ConfirmRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	consumerRouter.Handle("/restaurant/{restaurantID}/update/", UpdateRestaurantHandler{DB: db}).
+	consumerRouter.Handle("/restaurant/{restaurantID}/update/", Chain(UpdateRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	consumerRouter.Handle("/restaurant/{restaurantID}/", GetRestaurantHandler{DB: db}).
+	consumerRouter.Handle("/restaurant/{restaurantID}/", Chain(GetRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("GET")
 }
