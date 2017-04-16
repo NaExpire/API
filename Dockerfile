@@ -1,8 +1,8 @@
-FROM golang:1.7.5
+FROM golang:1.8.1
 
 RUN mkdir -p /app
 RUN mkdir -p $GOPATH/src/github.com/NAExpire/API/src
-ADD . $GOPATH/src/github.com/NAExpire/API/src
+ADD src $GOPATH/src/github.com/NAExpire/API/src
 WORKDIR $GOPATH/src/github.com/NAExpire/API/src
 RUN go build -o /app/API
 EXPOSE 8000
