@@ -58,5 +58,6 @@ func (handler ConfirmRegistrationHandler) ServeHTTP(writer http.ResponseWriter, 
 		return
 	}
 
-	io.WriteString(writer, "{\"ok\": true")
+	writer.WriteHeader(http.StatusOK)
+	io.WriteString(writer, "{\"ok\": true}")
 }

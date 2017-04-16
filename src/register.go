@@ -76,7 +76,7 @@ func (handler ConsumerRegistrationHandler) ServeHTTP(writer http.ResponseWriter,
 	}
 
 	writer.WriteHeader(http.StatusCreated)
-	io.WriteString(writer, "{\"ok\": true")
+	io.WriteString(writer, "{\"ok\": true}")
 }
 
 func (handler BusinessRegistrationHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -111,7 +111,7 @@ func (handler BusinessRegistrationHandler) ServeHTTP(writer http.ResponseWriter,
 	}
 
 	writer.WriteHeader(http.StatusCreated)
-	io.WriteString(writer, "{\"ok\": true")
+	io.WriteString(writer, "{\"ok\": true}")
 }
 
 func validateCredentials(db *sql.DB, email string, password string, phoneNumber string) (int, error) {
