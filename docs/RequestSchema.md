@@ -1,115 +1,125 @@
-# Reusable schema 
-## menuItem: 
-```json
-{
-    "itemId": <string>,
-    "name": <string>,
-    "price": <string>,
-    "description": <string>
-}
-```
+# Business Endpoints
 
 ## Login
-Endpoint: POST /api/business/login/
+Endpoint: POST /api/business/login/ <br />
 Request:
 ```json
 {
-    "username": <string>,
-    "password": <string>
+    "username": string,
+    "password": string
 }
 ```
 
 Response:
 ```json
 {
-    "name": <string>,
-    "username": <string>,
-    "menuItems": [<menuItem> ...],
-    "restaurantId": <string>
+    "name": string,
+    "username": string,
+    "menuItems": [menuItem...],
+    "restaurantId": string
 }
 ```
 
 ## Register
-Endpoint: POST /api/business/register/
+Endpoint: POST /api/business/register/ <br />
 Request
 ```json
 {
-    "firstName": <string>,
-    "lastName": <string>,
-    "email": <string>,
-    "password": <string>,
-    "personalPhoneNumber": <string>,
-    "restaurantName": <string>,
-    "addressLine1": <string>,
-    "addressLine2": <string>,
-    "city": <string>,
-    "state": <string>,
-    "zip": <string>,
-    "businessPhoneNumber": <string>,
-    "description": <string>
+    "firstName": string,
+    "lastName": string,
+    "email": string,
+    "password": string,
+    "personalPhoneNumber": string,
+    "restaurantName": string,
+    "addressLine1": string,
+    "addressLine2": string,
+    "city": string,
+    "state": string,
+    "zip": string,
+    "businessPhoneNumber": string,
+    "description": string
 }
 ```
 
 Response
 ```json
 {
-    "ok": <boolean>
+    "ok": boolean
 }
 ```
 
 ## Confirm Registration
-Endpoint: POST /api/business/register/confirm/
+Endpoint: POST /api/business/register/confirm/ <br />
 Request
 ```json
 {
-    "emailAddress": <string>,
-    "confirmationCode": <string>
+    "emailAddress": string,
+    "confirmationCode": string
 }
 ```
 
 Response
 ```json
 {
-    "ok": <boolean>
+    "ok": boolean
 }
 ```
 
-## Get Restaurant Details
-GET /api/business/restaurant/<restaurantId:string>/
-Response
+
+# Consumer Endpoints
+## Login
+Endpoint: POST /api/consumer/login/ <br />
+Request:
 ```json
 {
-    "name": <string>,
-    "address": <string>,
-    "phoneNumber": <string>,
-    "description": <string>,
-    "restaurantId": <string>,
-    "foodTypes": [<string>...]
+    "username": string,
+    "password": string
 }
 ```
 
-## Get Menu
-GET /api/business/restaurant/<restaurantId:string>/menu/<menuItemId:string>/
-Response
+Response:
 ```json
 {
-    "menuItems": [<menuItem> ...]
+    "name": string,
+    "username": string,
+    "menuItems": [menuItem...],
+    "restaurantId": string
 }
 ```
 
-## Update Menu Item
-POST /api/business/restaurant/<restaurantId:string>/menu/<menuItemId:string>/update/
+## Register
+Endpoint: POST /api/consumer/register/ <br />
 Request
 ```json
 {
-    "name": <string>,
-    "price": <string>,
-    "description": <string>
+    "firstName": string,
+    "lastName": string,
+    "email": string,
+    "password": string,
+    "personalPhoneNumber": string,
 }
 ```
+
 Response
 ```json
 {
-    "ok": <boolean>
+    "ok": boolean
+}
+```
+
+## Confirm Registration
+Endpoint: POST /api/consumer/register/confirm/ <br />
+Request
+```json
+{
+    "emailAddress": string,
+    "confirmationCode": string
+}
+```
+
+Response
+```json
+{
+    "ok": boolean
 }
 ```
