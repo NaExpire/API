@@ -15,10 +15,10 @@ func GenerateSessionID() string {
 
 // CreateSession will, given a database connection and a session ID, create a
 // new
-func CreateSession(db *sql.DB, sessionID string) error {
+func CreateSession(db *sql.DB, sessionID string, userID int) error {
 	// store given session id at the row of the session table with
 	// assiociated user id. return errors if encountered
-	_, err := db.Exec("INSERT INTO sessions (`session-content`) VALUES (?)", sessionID)
+	_, err := db.Exec("INSERT INTO `sessions` (`session-content`, `user-id`) VALUES (?, ?)", sessionID, userID)
 	return err
 }
 
@@ -32,8 +32,29 @@ func ValidateSession(db *sql.DB, sessionID string) (bool, error) {
 	return false, err
 }
 
+func ValidateSessionAndUserType(db *sql.DB, sessionID string, userType string) (bool, error) {
+	// look up session in session id column, throw error if not found.
+	rows, err := db.Query("SELECT `type` FROM `users` INNER JOIN `sessions` ON sessions.`user-id` = users.`id` AND sessions.`session-content` = ?", sessionID)
+	defer rows.Close()
+	if err != nil {
+		return false, err
+	} else if !rows.Next() {
+		return false, nil
+	}
+
+	var readUserType string
+	err = rows.Scan(&readUserType)
+	if err != nil {
+		return false, err
+	} else if readUserType != userType {
+		return false, nil
+	}
+
+	return true, nil
+}
+
 func InvalidateSession(db *sql.DB, sessionID string) error {
 	// remove session from session id table.
-	_, err := db.Query("DELETE FROM sessions WHERE `session-content`=?", sessionID)
+	_, err := db.Query("DELETE FROM `sessions` WHERE `session-content`=?", sessionID)
 	return err
 }

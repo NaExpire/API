@@ -32,7 +32,7 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 		return
 	}
 
-	rows, err := handler.DB.Query("SELECT password, confirmed FROM users WHERE email=?", x.Email)
+	rows, err := handler.DB.Query("SELECT `id`, `password`, `confirmed` FROM users WHERE email=?", x.Email)
 	defer rows.Close()
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -45,9 +45,10 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 		return
 	}
 
+	var userID int
 	var passwordHash string
 	var confirmed int
-	err = rows.Scan(&passwordHash, &confirmed)
+	err = rows.Scan(&userID, &passwordHash, &confirmed)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -59,7 +60,7 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	}
 
 	myUniqueSessionID := seshin.GenerateSessionID()
-	err = seshin.CreateSession(handler.DB, myUniqueSessionID)
+	err = seshin.CreateSession(handler.DB, myUniqueSessionID, userID)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -73,7 +74,7 @@ func (handler LoginHandler) ServeHTTP(writer http.ResponseWriter, request *http.
 	}
 
 	writer.WriteHeader(http.StatusOK)
-	responseBody := "{\"ok\": true,\"sessionID\": " + myUniqueSessionID + "}"
+	responseBody := "{\"ok\": true,\"sessionID\": \"" + myUniqueSessionID + "\"}"
 	io.WriteString(writer, responseBody)
 }
 
