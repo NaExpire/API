@@ -13,10 +13,24 @@ Request:
 Response:
 ```json
 {
-    "name": string,
-    "username": string,
-    "menuItems": [menuItem...],
-    "restaurantId": string
+    "ok": boolean,
+    "sessionID": string
+}
+```
+
+## Logout
+Endpoint: POST /api/business/logout/ <br />
+Headers:
+```
+session: sessionID
+```
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
 }
 ```
 
@@ -68,7 +82,7 @@ Response
 
 # Consumer Endpoints
 ## Login
-Endpoint: POST /api/consumer/login/ <br />
+Endpoint: POST /api/business/login/ <br />
 Request:
 ```json
 {
@@ -80,10 +94,24 @@ Request:
 Response:
 ```json
 {
-    "name": string,
-    "username": string,
-    "menuItems": [menuItem...],
-    "restaurantId": string
+    "ok": boolean,
+    "sessionID": string
+}
+```
+
+## Logout
+Endpoint: POST /api/business/logout/ <br />
+Headers:
+```
+session: sessionID
+```
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
 }
 ```
 
