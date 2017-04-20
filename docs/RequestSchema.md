@@ -13,10 +13,24 @@ Request:
 Response:
 ```json
 {
-    "name": string,
-    "username": string,
-    "menuItems": [menuItem...],
-    "restaurantId": string
+    "ok": boolean,
+    "sessionID": string
+}
+```
+
+## Logout
+Endpoint: POST /api/business/logout/ <br />
+Headers:
+```
+session: sessionID
+```
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
 }
 ```
 
@@ -45,6 +59,34 @@ Response
 ```json
 {
     "ok": boolean
+}
+```
+
+## Get Restaurant details
+Endpoint: GET /api/business/restaurant/<restaurantID:int>/ <br />
+
+Response
+```json
+{
+	"name": string,
+	"description": string,
+	"address": string,
+	"city": string,
+	"state": string
+}
+```
+
+## Update Restaurant details
+Endpoint: POST /api/business/restaurant/<restaurantID:int>/update/ <br />
+
+Response
+```json
+{
+	"name": string,
+	"description": string,
+	"address": string,
+	"city": string,
+	"state": string
 }
 ```
 
@@ -80,10 +122,24 @@ Request:
 Response:
 ```json
 {
-    "name": string,
-    "username": string,
-    "menuItems": [menuItem...],
-    "restaurantId": string
+    "ok": boolean,
+    "sessionID": string
+}
+```
+
+## Logout
+Endpoint: POST /api/consumer/logout/ <br />
+Headers:
+```
+session: sessionID
+```
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
 }
 ```
 
@@ -121,5 +177,19 @@ Response
 ```json
 {
     "ok": boolean
+}
+```
+
+## Get Restaurant details
+Endpoint: GET /api/consumer/restaurant/<restaurantID:int>/ <br />
+
+Response
+```json
+{
+	"name": string,
+	"description": string,
+	"address": string,
+	"city": string,
+	"state": string
 }
 ```
