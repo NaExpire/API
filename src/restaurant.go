@@ -20,18 +20,18 @@ type UpdateRestaurantHandler struct {
 type restaurantSchema struct {
 	Name          string `json:"name"`
 	BusinessPhone string `json:"phone-number"`
-	PickupTime    string `json:"pickup-time"`
-	Description   string `json:"description"`
-	Address       string `json:"address"`
-	City          string `json:"city"`
-	State         string `json:"state"`
+	//PickupTime    time.Time `json:"pickup-time"`
+	Description string `json:"description"`
+	Address     string `json:"address"`
+	City        string `json:"city"`
+	State       string `json:"state"`
 }
 
 func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	x := &restaurantSchema{}
 
-	rows, err := handler.DB.Query("SELECT `name`, `phone-number`, `pickup-time`, `description`, `address`, `city`, `state` FROM restaurants WHERE id=?", vars["id"])
+	rows, err := handler.DB.Query("SELECT `name`, `phone-number`, `description`, `address`, `city`, `state` FROM restaurants WHERE id=?", vars["restaurantID"])
 
 	defer rows.Close()
 
@@ -43,11 +43,11 @@ func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, reques
 
 	if !rows.Next() {
 		writer.WriteHeader(http.StatusNotFound)
-		util.WriteErrorJSON(writer, "Restaurant with ID "+vars["id"]+" could not be found")
+		util.WriteErrorJSON(writer, "Restaurant with ID "+vars["restaurantID"]+" could not be found")
 		return
 	}
 
-	err = rows.Scan(&x.Name, &x.Description, &x.Address, &x.City, &x.State)
+	err = rows.Scan(&x.Name, &x.BusinessPhone, &x.Description, &x.Address, &x.City, &x.State)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -67,7 +67,7 @@ func (handler UpdateRestaurantHandler) ServeHTTP(writer http.ResponseWriter, req
 		return
 	}
 
-	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , phone-number = ? , pickup-time = ? , description = ? , address = ? , city = ? , state = ?  WHERE id = ?", x.Name, x.BusinessPhone, x.PickupTime, x.Description, x.Address, x.City, x.State, vars["id"])
+	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , `phone-number` = ? , description = ? , address = ? , city = ? , state = ?  WHERE id = ?", x.Name, x.BusinessPhone, x.Description, x.Address, x.City, x.State, vars["restaurantID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
