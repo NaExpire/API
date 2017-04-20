@@ -62,6 +62,34 @@ Response
 }
 ```
 
+## Get Restaurant details
+Endpoint: GET /api/business/restaurant/<restaurantID:int>/ <br />
+
+Response
+```json
+{
+	"name": string,
+	"description": string,
+	"address": string,
+	"city": string,
+	"state": string
+}
+```
+
+## Update Restaurant details
+Endpoint: POST /api/business/restaurant/<restaurantID:int>/update/ <br />
+
+Response
+```json
+{
+	"name": string,
+	"description": string,
+	"address": string,
+	"city": string,
+	"state": string
+}
+```
+
 ## Confirm Registration
 Endpoint: POST /api/business/register/confirm/ <br />
 Request
@@ -82,7 +110,7 @@ Response
 
 # Consumer Endpoints
 ## Login
-Endpoint: POST /api/business/login/ <br />
+Endpoint: POST /api/consumer/login/ <br />
 Request:
 ```json
 {
@@ -100,7 +128,7 @@ Response:
 ```
 
 ## Logout
-Endpoint: POST /api/business/logout/ <br />
+Endpoint: POST /api/consumer/logout/ <br />
 Headers:
 ```
 session: sessionID
@@ -149,5 +177,19 @@ Response
 ```json
 {
     "ok": boolean
+}
+```
+
+## Get Restaurant details
+Endpoint: GET /api/consumer/restaurant/<restaurantID:int>/ <br />
+
+Response
+```json
+{
+	"name": string,
+	"description": string,
+	"address": string,
+	"city": string,
+	"state": string
 }
 ```
