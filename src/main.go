@@ -50,15 +50,10 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Methods("POST")
 	businessRouter.Handle("/register/confirm/", Chain(ConfirmRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}", MenuGetHandler)
-	// businessRouter.HandleFunc("/restaurant/{restaurantID}/menu/{menuItemID}/update/", MenuUpdateHandler).
-	// 	Methods("POST")
 	businessRouter.Handle("/restaurant/{restaurantID}/", Chain(GetRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("GET")
 	businessRouter.Handle("/restaurant/{restaurantID}/update/", Chain(UpdateRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	// businessRouter.HandleFunc("/discount/create/{restaurantID}/{menuItemID}", DiscountCreateHandler).
-	// 	Methods("POST")
 }
 
 func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
@@ -72,8 +67,6 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 	consumerRouter.Handle("/register/", Chain(ConsumerRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
 	consumerRouter.Handle("/register/confirm/", Chain(ConfirmRegistrationHandler{DB: db}, AllowCORS())).
-		Methods("POST")
-	consumerRouter.Handle("/restaurant/{restaurantID}/update/", Chain(UpdateRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("POST")
 	consumerRouter.Handle("/restaurant/{restaurantID}/", Chain(GetRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("GET")

@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -29,32 +28,31 @@ type restaurantSchema struct {
 func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	x := &restaurantSchema{}
-	err := util.DecodeJSON(request.Body, x)
-	fmt.Printf("Got %s request to GetRestaurantHandler\n", request.Method)
-	if err != nil {
-		io.WriteString(writer, err.Error()+"\n")
-		return
-	}
 
-	rows, err := handler.DB.Query("SELECT name, description, address, city, state FROM restaurants WHERE id=?", vars["id"])
+	rows, err := handler.DB.Query("SELECT `name`, `description`, `address`, `city`, `state` FROM restaurants WHERE id=?", vars["id"])
 
 	defer rows.Close()
 
 	if err != nil {
-		io.WriteString(writer, err.Error()+"\n")
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
 
-	if rows.Next() {
-		err := rows.Scan(&x.Name, &x.Description, &x.Address, &x.City, &x.State)
-		if err != nil {
-			io.WriteString(writer, err.Error()+"\n")
-		}
-		util.EncodeJSON(writer, x)
-	} else {
-		writer.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(writer, "{\"ok\": false}")
+	if !rows.Next() {
+		writer.WriteHeader(http.StatusNotFound)
+		util.WriteErrorJSON(writer, "Restaurant with ID "+vars["id"]+" could not be found")
+		return
 	}
+
+	err = rows.Scan(&x.Name, &x.Description, &x.Address, &x.City, &x.State)
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	util.EncodeJSON(writer, x)
 }
 
 func (handler UpdateRestaurantHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -68,10 +66,12 @@ func (handler UpdateRestaurantHandler) ServeHTTP(writer http.ResponseWriter, req
 	}
 
 	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , description = ? , address = ? , city = ? , state = ?  WHERE id = ?", x.Name, x.Description, x.Address, x.City, x.State, vars["id"])
+
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		io.WriteString(writer, err.Error()+"\n")
 		return
 	}
+
 	io.WriteString(writer, "{\"ok\": true}")
 }
