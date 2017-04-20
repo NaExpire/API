@@ -18,18 +18,20 @@ type UpdateRestaurantHandler struct {
 }
 
 type restaurantSchema struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Address     string `json:"address"`
-	City        string `json:"city"`
-	State       string `json:"state"`
+	Name          string `json:"name"`
+	BusinessPhone string `json:"phone-number"`
+	PickupTime    string `json:"pickup-time"`
+	Description   string `json:"description"`
+	Address       string `json:"address"`
+	City          string `json:"city"`
+	State         string `json:"state"`
 }
 
 func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	x := &restaurantSchema{}
 
-	rows, err := handler.DB.Query("SELECT `name`, `description`, `address`, `city`, `state` FROM restaurants WHERE id=?", vars["id"])
+	rows, err := handler.DB.Query("SELECT `name`, `phone-number`, `pickup-time`, `description`, `address`, `city`, `state` FROM restaurants WHERE id=?", vars["id"])
 
 	defer rows.Close()
 
@@ -65,7 +67,7 @@ func (handler UpdateRestaurantHandler) ServeHTTP(writer http.ResponseWriter, req
 		return
 	}
 
-	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , description = ? , address = ? , city = ? , state = ?  WHERE id = ?", x.Name, x.Description, x.Address, x.City, x.State, vars["id"])
+	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , phone-number = ? , pickup-time = ? , description = ? , address = ? , city = ? , state = ?  WHERE id = ?", x.Name, x.BusinessPhone, x.PickupTime, x.Description, x.Address, x.City, x.State, vars["id"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
