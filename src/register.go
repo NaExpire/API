@@ -103,7 +103,7 @@ func (handler BusinessRegistrationHandler) ServeHTTP(writer http.ResponseWriter,
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO `restaurants` (`ownerid`, `name`, `description`, `address`, `city`, `state`, `zip`, `registration-date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", insertedID, x.RestaurantName, x.Description, x.AddressLine1+"\n"+x.AddressLine2, x.City, x.State, x.Zip, time.Now())
+	_, err = handler.DB.Exec("INSERT INTO `restaurants` (`ownerid`, `name`, `description`, `address`, `city`, `state`, `zip`, `phone-number`, `registration-date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", insertedID, x.RestaurantName, x.Description, x.AddressLine1+"\n"+x.AddressLine2, x.City, x.State, x.Zip, x.BusinessPhoneNumber, time.Now())
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
