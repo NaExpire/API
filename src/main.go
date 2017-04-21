@@ -54,6 +54,14 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Methods("GET")
 	businessRouter.Handle("/restaurant/{restaurantID}/update/", Chain(UpdateRestaurantHandler{DB: db}, AllowCORS())).
 		Methods("POST")
+	businessRouter.Handle("/meal/{mealID}/", Chain(GetMealHandler{DB: db}, AllowCORS())).
+		Methods("GET")
+	businessRouter.Handle("/meal/{mealID}/update/", Chain(UpdateMealHandler{DB: db}, AllowCORS())).
+		Methods("PUT")
+	businessRouter.Handle("/meal/create/", Chain(AddMealHandler{DB: db}, AllowCORS())).
+		Methods("POST")
+	businessRouter.Handle("/meal/{mealID}/delete/", Chain(DeleteMealHandler{DB: db}, AllowCORS())).
+		Methods("DELETE")
 }
 
 func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
@@ -69,5 +77,7 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 	consumerRouter.Handle("/register/confirm/", Chain(ConfirmRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
 	consumerRouter.Handle("/restaurant/{restaurantID}/", Chain(GetRestaurantHandler{DB: db}, AllowCORS())).
+		Methods("GET")
+	consumerRouter.Handle("/meal/{mealID}/", Chain(GetMealHandler{DB: db}, AllowCORS())).
 		Methods("GET")
 }
