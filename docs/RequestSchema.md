@@ -65,6 +65,8 @@ Response
 ## Get Restaurant details
 Endpoint: GET /api/business/restaurant/<restaurantID:int>/ <br />
 
+Request: no request schema necessary <br />
+
 Response
 ```json
 {
@@ -101,6 +103,73 @@ Request
 ```
 
 Response
+```json
+{
+    "ok": boolean
+}
+```
+
+## Create meal
+Endpoint: POST /api/business/meal/create/
+
+Request:
+```json
+{
+    "name": string,
+    "description": string,
+    "restaurantID": int,
+    "price": double
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Get meal info
+Endpoint: GET /api/business/meal/<mealID:int>/ <br />
+
+Request: no request schema necessary <br />
+
+Response: 
+```json
+{
+    "name": string,
+    "description": string,
+    "restaurantID": int,
+    "price": double
+}
+```
+
+## Update meal info
+Endpoint: PUT /api/business/meal/<mealID:int>/update/ <br />
+
+Request:
+```json
+{
+    "name": string,
+    "description": string,
+    "restaurantID": int,
+    "price": double
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Delete meal
+Endpoint DELETE /api/business/meal/<mealID:int>/delete/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
 ```json
 {
     "ok": boolean
