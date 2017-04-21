@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/NAExpire/API/src/util"
 	"github.com/gorilla/mux"
 )
 
@@ -35,11 +36,38 @@ func (handler IssueTransactionHandler) ServeHTTP(writer http.ResponseWriter, req
 func (handler CancelTransactionHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 
-	_, err := handler.DB.Exec("UPDATE transactions SET status = ? WHERE id = ?", "cancelled", vars["transactionID"])
+	rows, err := handler.DB.Query("SELECT `status` FROM `transactions` INNER JOIN `sessions` ON sessions.`user-id` = transactions.`user-id` AND sessions.`session-content` = ? AND transactions.`id` = ?", request.Header.Get("session"), vars["transactionID"])
+
+	if err != nil {
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	defer rows.Close()
+
+	if !rows.Next() {
+		writer.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	var transactionStatus string
+	err = rows.Scan(&transactionStatus)
+
+	if err != nil {
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if transactionStatus != "open" && transactionStatus != "accepted" {
+		writer.WriteHeader(http.StatusUnprocessableEntity)
+		return
+	}
+
+	_, err = handler.DB.Exec("UPDATE transactions SET status = ? WHERE id = ?", "cancelled", vars["transactionID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(writer, err.Error()+"\n")
+		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
 
@@ -49,7 +77,34 @@ func (handler CancelTransactionHandler) ServeHTTP(writer http.ResponseWriter, re
 func (handler RejectTransactionHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 
-	_, err := handler.DB.Exec("UPDATE transactions SET status = ? WHERE id = ?", "rejected", vars["transactionID"])
+	rows, err := handler.DB.Query("SELECT `status` FROM `transactions` INNER JOIN `sessions` ON sessions.`user-id` = transactions.`restaurant-id` AND sessions.`session-content` = ? AND transactions.`id` = ?", request.Header.Get("session"), vars["transactionID"])
+
+	if err != nil {
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	defer rows.Close()
+
+	if !rows.Next() {
+		writer.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	var transactionStatus string
+	err = rows.Scan(&transactionStatus)
+
+	if err != nil {
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if transactionStatus != "open" {
+		writer.WriteHeader(http.StatusUnprocessableEntity)
+		return
+	}
+
+	_, err = handler.DB.Exec("UPDATE transactions SET status = ? WHERE id = ?", "rejected", vars["transactionID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -63,7 +118,34 @@ func (handler RejectTransactionHandler) ServeHTTP(writer http.ResponseWriter, re
 func (handler AcceptTransactionHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 
-	_, err := handler.DB.Exec("UPDATE transactions SET status = ? WHERE id = ?", "accepted", vars["transactionID"])
+	rows, err := handler.DB.Query("SELECT `status` FROM `transactions` INNER JOIN `sessions` ON sessions.`user-id` = transactions.`restaurant-id` AND sessions.`session-content` = ? AND transactions.`id` = ?", request.Header.Get("session"), vars["transactionID"])
+
+	if err != nil {
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	defer rows.Close()
+
+	if !rows.Next() {
+		writer.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	var transactionStatus string
+	err = rows.Scan(&transactionStatus)
+
+	if err != nil {
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if transactionStatus != "open" {
+		writer.WriteHeader(http.StatusUnprocessableEntity)
+		return
+	}
+
+	_, err = handler.DB.Exec("UPDATE transactions SET status = ? WHERE id = ?", "accepted", vars["transactionID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -77,7 +159,34 @@ func (handler AcceptTransactionHandler) ServeHTTP(writer http.ResponseWriter, re
 func (handler FulfillTransactionHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 
-	_, err := handler.DB.Exec("UPDATE transactions SET status = ? WHERE id = ?", "fulfilled", vars["transactionID"])
+	rows, err := handler.DB.Query("SELECT `status` FROM `transactions` INNER JOIN `sessions` ON sessions.`user-id` = transactions.`user-id` AND sessions.`session-content` = ? AND transactions.`id` = ?", request.Header.Get("session"), vars["transactionID"])
+
+	if err != nil {
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	defer rows.Close()
+
+	if !rows.Next() {
+		writer.WriteHeader(http.StatusForbidden)
+		return
+	}
+
+	var transactionStatus string
+	err = rows.Scan(&transactionStatus)
+
+	if err != nil {
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if transactionStatus != "accepted" {
+		writer.WriteHeader(http.StatusUnprocessableEntity)
+		return
+	}
+
+	_, err = handler.DB.Exec("UPDATE transactions SET status = ? WHERE id = ?", "fulfilled", vars["transactionID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
