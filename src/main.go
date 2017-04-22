@@ -42,7 +42,7 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Subrouter()
 
 	// e.g. /api/business/login/
-	businessRouter.Handle("/login/", Chain(LoginHandler{DB: db}, AllowCORS())).
+	businessRouter.Handle("/login/", Chain(BusinessLoginHandler{DB: db}, AllowCORS())).
 		Methods("POST")
 	businessRouter.Handle("/logout/", Chain(LogoutHandler{DB: db}, AllowCORS())).
 		Methods("POST")
@@ -76,7 +76,7 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 	consumerRouter := parent.PathPrefix("/api/consumer").
 		Subrouter()
 
-	consumerRouter.Handle("/login/", Chain(LoginHandler{DB: db}, AllowCORS())).
+	consumerRouter.Handle("/login/", Chain(ConsumerLoginHandler{DB: db}, AllowCORS())).
 		Methods("POST")
 	consumerRouter.Handle("/logout/", Chain(LogoutHandler{DB: db}, AllowCORS())).
 		Methods("POST")
