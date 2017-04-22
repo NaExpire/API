@@ -75,7 +75,7 @@ func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 		menuItems = append(menuItems, meal)
 	}
 
-	dealRows, err := handler.DB.Query("SELECT d.`meal-id`, d.`deal-price`, d.quantity FROM `carts-deals` AS c INNER JOIN `users` AS u ON c.id = u.`cart-id` INNER JOIN sessions AS s ON s.`user-id` = u.id INNER JOIN `deals` AS d ON c.`deal-id` = d.id WHERE s.`session-content` = ?", request.Header.Get("session"))
+	dealRows, err := handler.DB.Query("SELECT d.`meal-id`, d.`deal-price`, d.`quantity` FROM `deals` AS d INNER JOIN `carts-deals` AS c ON c.`deal-id` = d.`id` INNER JOIN `users` ON `users`.`cart-id` = c.`cart-id` INNER JOIN `sessions` ON `sessions`.`user-id` = `users`.`id` WHERE `session-content` = ?", request.Header.Get("session"))
 
 	defer dealRows.Close()
 
