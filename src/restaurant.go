@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"io"
 	"net/http"
 
@@ -26,16 +25,30 @@ type UpdateItemsHandler struct {
 	DB *sql.DB
 }
 
-type restaurantSchema struct {
-	Name          string `json:"name"`
-	BusinessPhone string `json:"phone-number"`
-	//PickupTime    time.Time `json:"pickup-time"`
-	Description string       `json:"description"`
-	Address     string       `json:"address"`
-	City        string       `json:"city"`
-	State       string       `json:"state"`
-	Meals       []mealSchema `json:"meals"`
-	Deals       []dealSchema `json:"deals"`
+type getRestaurantSchema struct {
+	Name          string       `json:"name"`
+	BusinessPhone string       `json:"phone-number"`
+	PickupTime    string       `json:"pickup-time"`
+	Description   string       `json:"description"`
+	Address       string       `json:"address"`
+	City          string       `json:"city"`
+	State         string       `json:"state"`
+	Meals         []mealSchema `json:"meals"`
+	Deals         []dealSchema `json:"deals"`
+	Items         string       `json:"items"`
+}
+
+type updateRestaurantSchema struct {
+	Name          string       `json:"name"`
+	BusinessPhone string       `json:"phone-number"`
+	PickupTime    string       `json:"pickup-time"`
+	Description   string       `json:"description"`
+	Address       string       `json:"address"`
+	City          string       `json:"city"`
+	State         string       `json:"state"`
+	Meals         []mealSchema `json:"meals"`
+	Deals         []dealSchema `json:"deals"`
+	Items         string       `json:"items"`
 }
 
 type itemsSchema struct {
@@ -48,9 +61,9 @@ type itemsSchema struct {
 
 func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
-	x := &restaurantSchema{}
+	x := &getRestaurantSchema{}
 
-	rows, err := handler.DB.Query("SELECT `name`, `phone-number`, `description`, `address`, `city`, `state` FROM restaurants WHERE id=?", vars["restaurantID"])
+	rows, err := handler.DB.Query("SELECT `name`, `phone-number`, `description`, `address`, `city`, `state`, `items`, `pickup-time` FROM restaurants WHERE id=?", vars["restaurantID"])
 
 	defer rows.Close()
 
@@ -66,7 +79,7 @@ func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, reques
 		return
 	}
 
-	err = rows.Scan(&x.Name, &x.BusinessPhone, &x.Description, &x.Address, &x.City, &x.State)
+	err = rows.Scan(&x.Name, &x.BusinessPhone, &x.Description, &x.Address, &x.City, &x.State, &x.Items, &x.PickupTime)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -114,7 +127,7 @@ func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, reques
 
 func (handler UpdateRestaurantHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
-	x := &restaurantSchema{}
+	x := &updateRestaurantSchema{}
 	err := util.DecodeJSON(request.Body, x)
 
 	if err != nil {
@@ -122,7 +135,7 @@ func (handler UpdateRestaurantHandler) ServeHTTP(writer http.ResponseWriter, req
 		return
 	}
 
-	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , `phone-number` = ? , description = ? , address = ? , city = ? , state = ?  WHERE id = ?", x.Name, x.BusinessPhone, x.Description, x.Address, x.City, x.State, vars["restaurantID"])
+	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , `phone-number` = ? , description = ? , address = ? , city = ? , state = ?, `pickup-time` = ?, `items` = ? WHERE id = ?", x.Name, x.BusinessPhone, x.Description, x.Address, x.City, x.State, x.PickupTime, x.Items, vars["restaurantID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -130,54 +143,6 @@ func (handler UpdateRestaurantHandler) ServeHTTP(writer http.ResponseWriter, req
 		return
 	}
 
-	io.WriteString(writer, "{\"ok\": true}")
-}
-
-func (handler GetItemsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	x := &itemsSchema{}
-	err := util.DecodeJSON(request.Body, x)
-	fmt.Printf("Got %s request to GetItemHandler\n", request.Method)
-	if err != nil {
-		io.WriteString(writer, err.Error()+"\n")
-		return
-	}
-	rows, err := handler.DB.Query("SELECT items, `pickup-tme`, price, `pickup-max`, `pickup-remaining` FROM restaurants WHERE id=?", vars["id"])
-
-	defer rows.Close()
-
-	if err != nil {
-		io.WriteString(writer, err.Error()+"\n")
-		return
-	} else if !rows.Next() {
-		writer.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(writer, "{\"ok\": false}")
-		return
-	}
-	err = rows.Scan(&x.Items, &x.PickupTime, &x.Price, &x.PickupMax, &x.PickupRemaining)
-	if err != nil {
-		io.WriteString(writer, err.Error()+"\n")
-		return
-	}
-	util.EncodeJSON(writer, x)
-}
-
-func (handler UpdateItemsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	vars := mux.Vars(request)
-	x := &itemsSchema{}
-	err := util.DecodeJSON(request.Body, x)
-
-	if err != nil {
-		io.WriteString(writer, err.Error()+"\n")
-		return
-	}
-
-	_, err = handler.DB.Exec("UPDATE restaurants SET items = ? , `pickup-tme` = ? , price = ? ,  `pickup-max` = ? , pickup-remaining` = ?  WHERE id = ?", x.Items, x.PickupTime, x.Price, x.PickupMax, x.PickupRemaining, vars["id"])
-	if err != nil {
-		writer.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(writer, err.Error()+"\n")
-		return
-	}
 	io.WriteString(writer, "{\"ok\": true}")
 }
 
