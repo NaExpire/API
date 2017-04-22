@@ -21,19 +21,15 @@ type AddDealCartHandler struct {
 	DB *sql.DB
 }
 
-type UpdateQuantityMealHandler struct {
-	DB *sql.DB
-}
-
 type DeleteMealCartHandler struct {
 	DB *sql.DB
 }
 
-type DeleteCartContentsHandler struct {
+type DeleteDealCartHandler struct {
 	DB *sql.DB
 }
 
-type DeleteDealCartHandler struct {
+type DeleteCartContentsHandler struct {
 	DB *sql.DB
 }
 
@@ -49,6 +45,14 @@ type addMealToCartSchema struct {
 
 type addDealToCartSchema struct {
 	DealID int `json:"dealID"`
+}
+
+type deleteMealSchema struct {
+	MealID int `json: "mealID"`
+}
+
+type deleteDealSchema struct {
+	DealID int `json: "dealID"`
 }
 
 func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -185,12 +189,74 @@ func (handler AddDealCartHandler) ServeHTTP(writer http.ResponseWriter, request 
 	io.WriteString(writer, "{\"ok\": true}")
 }
 
-func (handler UpdateQuantityMealHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (handler DeleteMealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	x := &deleteMealSchema{}
+	err := util.DecodeJSON(request.Body, x)
 
+	sessionID := request.Header.Get("session")
+
+	var cartID int
+	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+	defer cartIDRows.Close()
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if !cartIDRows.Next() {
+		writer.WriteHeader(http.StatusUnauthorized)
+		util.WriteErrorJSON(writer, "You do not have permission to make changes to this cart item.")
+		return
+	}
+
+	cartIDRows.Scan(&cartID)
+
+	_, err = handler.DB.Exec("DELETE FROM `carts-menuitems` WHERE `menuitem-id` = ? AND `cart-id` = ?", x.MealID, cartID)
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	io.WriteString(writer, "{\"ok\": true}")
 }
 
-func (handler DeleteMealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+func (handler DeleteDealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	x := &deleteDealSchema{}
+	err := util.DecodeJSON(request.Body, x)
 
+	sessionID := request.Header.Get("session")
+
+	var cartID int
+	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+	defer cartIDRows.Close()
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if !cartIDRows.Next() {
+		writer.WriteHeader(http.StatusUnauthorized)
+		util.WriteErrorJSON(writer, "You do not have permission to make changes to this cart item.")
+		return
+	}
+
+	cartIDRows.Scan(&cartID)
+
+	_, err = handler.DB.Exec("DELETE FROM `carts-deals` WHERE `deal-id` = ? AND `cart-id` = ?", x.DealID, cartID)
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	io.WriteString(writer, "{\"ok\": true}")
 }
 
 func (handler DeleteCartContentsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -215,8 +281,4 @@ func (handler DeleteCartContentsHandler) ServeHTTP(writer http.ResponseWriter, r
 	}
 
 	io.WriteString(writer, "{\"ok\": true}")
-}
-
-func (handler DeleteDealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-
 }
