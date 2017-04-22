@@ -30,10 +30,12 @@ type restaurantSchema struct {
 	Name          string `json:"name"`
 	BusinessPhone string `json:"phone-number"`
 	//PickupTime    time.Time `json:"pickup-time"`
-	Description string `json:"description"`
-	Address     string `json:"address"`
-	City        string `json:"city"`
-	State       string `json:"state"`
+	Description string       `json:"description"`
+	Address     string       `json:"address"`
+	City        string       `json:"city"`
+	State       string       `json:"state"`
+	Meals       []mealSchema `json:"meals"`
+	Deals       []dealSchema `json:"deals"`
 }
 
 type itemsSchema struct {
@@ -70,6 +72,42 @@ func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, reques
 		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
+
+	meals := make([]mealSchema, 0)
+	deals := make([]dealSchema, 0)
+
+	mealRows, mealErr := handler.DB.Query("SELECT `name`, `description`, `restaurantid`, `price`, `type` FROM `menuitems` WHERE `menuitems`.`restaurantid` = ?", vars["restaurantID"])
+	defer mealRows.Close()
+
+	dealRows, dealErr := handler.DB.Query("SELECT `meal-id`, `deal-price`, `quantity` FROM `deals` WHERE `deals`.`restaurant-id` = ?", vars["restaurantID"])
+	defer dealRows.Close()
+
+	if mealErr != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, mealErr.Error())
+		return
+	}
+
+	if dealErr != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, dealErr.Error())
+		return
+	}
+
+	for mealRows.Next() {
+		var meal mealSchema
+		mealRows.Scan(&meal.Name, &meal.Description, &meal.RestaurantID, &meal.Price, &meal.Type)
+		meals = append(meals, meal)
+	}
+
+	for dealRows.Next() {
+		var deal dealSchema
+		dealRows.Scan(&deal.MealID, &deal.DealPrice, &deal.Quantity)
+		deals = append(deals, deal)
+	}
+
+	x.Meals = meals
+	x.Deals = deals
 
 	util.EncodeJSON(writer, x)
 }
