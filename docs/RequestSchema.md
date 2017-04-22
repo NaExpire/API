@@ -187,7 +187,7 @@ Request:
 ```json
 {
     "meal-id": int,
-    "deal-price": float64,
+    "deal-price": double,
     "quantity": int
 }
 ```
@@ -208,7 +208,7 @@ Response:
 ```json
 {
     "meal-id": int,
-    "deal-price": float64,
+    "deal-price": double,
     "quantity": int
 }
 ```
@@ -220,7 +220,7 @@ Request:
 ```json
 {
      "meal-id": int,
-    "deal-price": float64,
+    "deal-price": double,
     "quantity": int
 }
 ```
@@ -380,7 +380,7 @@ Response:
 ```json
 {
     "meal-id": int,
-    "deal-price": float64,
+    "deal-price": double,
     "quantity": int
 }
 ```
