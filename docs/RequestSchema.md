@@ -187,7 +187,7 @@ Request:
 ```json
 {
     "meal-id": int,
-    "deal-price": float64,
+    "deal-price": double,
     "quantity": int
 }
 ```
@@ -208,7 +208,7 @@ Response:
 ```json
 {
     "meal-id": int,
-    "deal-price": float64,
+    "deal-price": double,
     "quantity": int
 }
 ```
@@ -220,7 +220,7 @@ Request:
 ```json
 {
      "meal-id": int,
-    "deal-price": float64,
+    "deal-price": double,
     "quantity": int
 }
 ```
@@ -244,8 +244,31 @@ Response:
 }
 ```
 
+## Accept Transaction
+Endpoint PUT /api/business/transaction/<transactionID:int>/accept/ <br />
 
-# Consumer Endpoints
+Request: Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Reject Transaction 
+Endpoint PUT /api/business/transaction/<transactionID:int>/reject/ <br />
+
+Request: Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+# Consumer Endpoints 
 ## Login
 Endpoint: POST /api/consumer/login/ <br />
 Request:
@@ -357,7 +380,34 @@ Response:
 ```json
 {
     "meal-id": int,
-    "deal-price": float64,
+    "deal-price": double,
     "quantity": int
+}
+```
+
+## Issue Transaction
+blocked
+
+## Cancel Transaction
+Endpoint PUT /api/consumer/transaction/<transactionID:int>/cancel/ <br />
+
+Request: Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Fulfil Transaction
+Endpoint PUT /api/consumer/transaction/<transactionID:int>/fulfill/ <br />
+
+Request: Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
 }
 ```
