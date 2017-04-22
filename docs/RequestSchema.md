@@ -186,7 +186,7 @@ Endpoint: POST /api/business/deal/create/
 Request:
 ```json
 {
-    "meal-id": int,
+    "mealID": int,
     "deal-price": double,
     "quantity": int
 }
@@ -207,9 +207,10 @@ Request: no request schema necessary <br />
 Response: 
 ```json
 {
-    "meal-id": int,
-    "deal-price": double,
-    "quantity": int
+    "mealID": int,
+    "dealPrice": double,
+    "quantity": int,
+    "restaurantID": int
 }
 ```
 
@@ -219,8 +220,8 @@ Endpoint: PUT /api/business/deal/<dealID:int>/update/ <br />
 Request:
 ```json
 {
-     "meal-id": int,
-    "deal-price": double,
+    "mealID": int,
+    "dealPrice": double,
     "quantity": int
 }
 ```
@@ -379,9 +380,10 @@ Request: no request schema necessary <br />
 Response: 
 ```json
 {
-    "meal-id": int,
-    "deal-price": double,
-    "quantity": int
+    "mealID": int,
+    "dealPrice": double,
+    "quantity": int,
+    "restaurantID": int
 }
 ```
 
@@ -434,9 +436,9 @@ Response:
     "deals": [
         ...
         {
-            "meal-id": int,
-            "deal-price": double,
-            "quantity": int
+            "mealID": int,
+            "dealPrice": double,
+            "quantity": int,
         },
         ...
     ]
