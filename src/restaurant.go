@@ -77,10 +77,10 @@ func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, reques
 	meals := make([]mealSchema, 0)
 	deals := make([]dealSchema, 0)
 
-	mealRows, mealErr := handler.DB.Query("SELECT `id` `name`, `description`, `restaurantid`, `price`, `type` FROM `menuitems` WHERE `menuitems`.`restaurantid` = ?", vars["restaurantID"])
+	mealRows, mealErr := handler.DB.Query("SELECT `id`, `name`, `description`, `restaurantid`, `price`, `type` FROM `menuitems` WHERE `menuitems`.`restaurantid` = ?", vars["restaurantID"])
 	defer mealRows.Close()
 
-	dealRows, dealErr := handler.DB.Query("SELECT `id` `meal-id`, `deal-price`, `quantity` FROM `deals` WHERE `deals`.`restaurant-id` = ?", vars["restaurantID"])
+	dealRows, dealErr := handler.DB.Query("SELECT `id`, `meal-id`, `deal-price`, `quantity` FROM `deals` WHERE `deals`.`restaurant-id` = ?", vars["restaurantID"])
 	defer dealRows.Close()
 
 	if mealErr != nil {
