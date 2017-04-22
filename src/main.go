@@ -44,7 +44,7 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 	// e.g. /api/business/login/
 	businessRouter.Handle("/login/", Chain(BusinessLoginHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	businessRouter.Handle("/logout/", Chain(LogoutHandler{DB: db}, AllowCORS())).
+	businessRouter.Handle("/logout/", Chain(LogoutHandler{DB: db}, AllowCORS(), Authenticate(db, "restaurant"))).
 		Methods("POST")
 	businessRouter.Handle("/register/", Chain(BusinessRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
@@ -78,7 +78,7 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 
 	consumerRouter.Handle("/login/", Chain(ConsumerLoginHandler{DB: db}, AllowCORS())).
 		Methods("POST")
-	consumerRouter.Handle("/logout/", Chain(LogoutHandler{DB: db}, AllowCORS())).
+	consumerRouter.Handle("/logout/", Chain(LogoutHandler{DB: db}, AllowCORS(), Authenticate(db, "consumer"))).
 		Methods("POST")
 	consumerRouter.Handle("/register/", Chain(ConsumerRegistrationHandler{DB: db}, AllowCORS())).
 		Methods("POST")
