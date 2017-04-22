@@ -221,7 +221,8 @@ Request:
 Response:
 ```json
 {
-    "ok": boolean
+    "ok": boolean,
+    "id": int
 }
 ```
 

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/NAExpire/API/src/util"
 	"github.com/gorilla/mux"
@@ -102,16 +103,24 @@ func (handler AddDealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 	err := util.DecodeJSON(request.Body, x)
 
 	if err != nil {
+		writer.WriteHeader(http.StatusBadRequest)
 		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO deals (`meal-id`, `deal-price`, `quantity`, `restaurant-id`) VALUES (?, ?, ?, ?) ", x.MealID, x.DealPrice, x.Quantity, x.RestaurantID)
-
+	result, err := handler.DB.Exec("INSERT INTO deals (`meal-id`, `deal-price`, `quantity`, `restaurant-id`) VALUES (?, ?, ?, ?) ", x.MealID, x.DealPrice, x.Quantity, x.RestaurantID)
 	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
 
-	io.WriteString(writer, "{\"ok\": true}")
+	insertedID, err := result.LastInsertId()
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	io.WriteString(writer, "{\"ok\": true, \"id\": "+strconv.FormatInt(insertedID, 10)+"}")
 }
