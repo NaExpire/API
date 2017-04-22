@@ -75,7 +75,7 @@ func (handler UpdateMealHandler) ServeHTTP(writer http.ResponseWriter, request *
 		return
 	}
 
-	_, err = handler.DB.Exec("UPDATE menuitems SET `name` = ?, `description` = ?,  `type` = ?, `price` = ? WHERE id = ?", x.Name, x.Description, x.Type, x.Price, vars["mealID"])
+	_, err = handler.DB.Exec("UPDATE menuitems SET `name` = ?, `description` = ?, `price` = ? WHERE id = ?", x.Name, x.Description, x.Price, vars["mealID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)

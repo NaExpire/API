@@ -213,7 +213,8 @@ Request:
 {
     "mealID": int,
     "deal-price": double,
-    "quantity": int
+    "quantity": int,
+    "restaurantID": int
 }
 ```
 
@@ -246,7 +247,6 @@ Endpoint: PUT /api/business/deal/<dealID:int>/update/ <br />
 Request:
 ```json
 {
-    "mealID": int,
     "dealPrice": double,
     "quantity": int
 }
