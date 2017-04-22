@@ -86,6 +86,7 @@ func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 	}
 
 	for dealRows.Next() {
+		println("DEAL!")
 		var deal dealSchema
 		dealRows.Scan(&deal.MealID, &deal.DealPrice, &deal.Quantity)
 		deals = append(deals, deal)
@@ -99,13 +100,14 @@ func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 }
 
 func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	var x addMealToCartSchema
+	x := &addMealToCartSchema{}
 	util.DecodeJSON(request.Body, x)
 
 	sessionID := request.Header.Get("session")
 
 	var cartID int
 	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` AS u INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+
 	defer cartIDRows.Close()
 
 	if err != nil {
@@ -122,12 +124,16 @@ func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request 
 
 	cartIDRows.Scan(&cartID)
 
-	rows, err := handler.DB.Query("SELECT `quantity` FROM `carts-menuitems` WHERE `cart-id` = ? AND `menuitems-id` = ?", cartID, x.MealID)
+	rows, err := handler.DB.Query("SELECT `quantity` FROM `carts-menuitems` WHERE `cart-id` = ? AND `menuitem-id` = ?", cartID, x.MealID)
+
 	defer rows.Close()
 
 	if err != nil {
+		println("1)")
 		writer.WriteHeader(http.StatusInternalServerError)
+		println("2)")
 		util.WriteErrorJSON(writer, err.Error())
+		println("3)")
 		return
 	}
 
@@ -135,7 +141,7 @@ func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request 
 	if !rows.Next() {
 		_, err = handler.DB.Exec("INSERT INTO `carts-menuitems` (`cart-id`, `menuitem-id`, `quantity`) VALUES (?, ?, ?)", cartID, x.MealID, x.Quantity)
 	} else {
-		_, err = handler.DB.Exec("UPDATE `carts-menuitems` SET `quantity` = ? WHERE `menuitem-id` = ? AND `cart-id` = ?", x.MealID, cartID)
+		_, err = handler.DB.Exec("UPDATE `carts-menuitems` SET `quantity` = ? WHERE `menuitem-id` = ? AND `cart-id` = ?", x.Quantity, x.MealID, cartID)
 	}
 
 	if err != nil {
@@ -148,7 +154,7 @@ func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request 
 }
 
 func (handler AddDealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	var x addDealToCartSchema
+	x := &addDealToCartSchema{}
 	util.DecodeJSON(request.Body, x)
 
 	sessionID := request.Header.Get("session")
