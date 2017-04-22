@@ -442,3 +442,74 @@ Response:
     ]
 }
 ```
+
+## Add Meal to Cart
+Endpoint POST /api/consumer/cart/add/meal/ <br />
+
+Request:
+```json
+{
+	"mealID": int,
+	"quantity": int
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Add Deal to Cart
+Endpoint POST /api/consumer/cart/add/deal/ <br />
+
+Request:
+```json
+{
+	"dealID": int
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Delete Cart Contents
+Endpoint DELETE /api/consumer/cart/empty/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Update Quantity Meal for Cart
+Endpoint PUT /api/consumer/cart/meal/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Delete Meal for Cart
+Endpoint DELETE /api/consumer/cart/meal/empty/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
