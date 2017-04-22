@@ -90,4 +90,16 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 		Methods("GET")
 	consumerRouter.Handle("/deal/{dealID}/", Chain(GetDealHandler{DB: db}, AllowCORS())).
 		Methods("GET")
+	consumerRouter.Handle("/cart/", Chain(GetCartHandler{DB: db}, AllowCORS())).
+		Methods("GET")
+	consumerRouter.Handle("/cart/empty/", Chain(DeleteCartContentsHandler{DB: db}, AllowCORS())).
+		Methods("DELETE")
+	consumerRouter.Handle("/cart/add/meal/", Chain(AddMealCartHandler{DB: db}, AllowCORS())).
+		Methods("POST")
+	consumerRouter.Handle("/cart/add/deal/", Chain(AddDealCartHandler{DB: db}, AllowCORS())).
+		Methods("POST")
+	consumerRouter.Handle("/cart/delete/meal/", Chain(DeleteMealCartHandler{DB: db}, AllowCORS())).
+		Methods("DELETE")
+	consumerRouter.Handle("/cart/delete/deal/", Chain(DeleteDealCartHandler{DB: db}, AllowCORS())).
+		Methods("DELETE")
 }
