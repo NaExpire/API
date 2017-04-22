@@ -38,7 +38,7 @@ func (handler GetMealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 	vars := mux.Vars(request)
 	x := &mealSchema{}
 
-	rows, err := handler.DB.Query("SELECT `id`, `name`, `description`, `restaurantId`, `price`, `type` FROM menuitems WHERE id=?", vars["mealID"])
+	rows, err := handler.DB.Query("SELECT `id`, `name`, `description`, `restaurantid`, `price`, `type` FROM menuitems WHERE id=?", vars["mealID"])
 
 	defer rows.Close()
 
@@ -74,7 +74,7 @@ func (handler UpdateMealHandler) ServeHTTP(writer http.ResponseWriter, request *
 		return
 	}
 
-	_, err = handler.DB.Exec("UPDATE menuitems SET `id` = ?, `name` = ? , `description` = ? , `restaurantId` = ?, `type` = ? , `price` = ? WHERE id = ?", x.MealID, x.Name, x.Description, x.RestaurantID, x.Price, x.Type, vars["mealID"])
+	_, err = handler.DB.Exec("UPDATE menuitems SET `name` = ?, `description` = ?,  `type` = ?, `price` = ? WHERE id = ?", x.Name, x.Description, x.Type, x.Price, vars["mealID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -107,7 +107,7 @@ func (handler AddMealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO menuitems (`id`, name` , `description`, `restaurantId`, `price`, `type`) VALUES (?, ? , ? , ?, ?, ?) ", x.MealID, x.Name, x.Description, x.RestaurantID, x.Price, x.Type)
+	_, err = handler.DB.Exec("INSERT INTO menuitems (`name`, `description`, `restaurantid`, `price`, `type`) VALUES (?, ?, ?, ?, ?)", x.Name, x.Description, x.RestaurantID, x.Price, x.Type)
 
 	if err != nil {
 		util.WriteErrorJSON(writer, err.Error())
