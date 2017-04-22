@@ -41,6 +41,7 @@ type businessRegistrationCredentials struct {
 	Zip                 string `json:"zip"`
 	BusinessPhoneNumber string `json:"businessPhoneNumber"`
 	Description         string `json:"description"`
+	PickupTime          string `json:"pickupTime"`
 }
 
 type consumerRegistrationCredentials struct {
@@ -103,7 +104,7 @@ func (handler BusinessRegistrationHandler) ServeHTTP(writer http.ResponseWriter,
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO `restaurants` (`ownerid`, `name`, `description`, `address`, `city`, `state`, `zip`, `phone-number`, `registration-date`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", insertedID, x.RestaurantName, x.Description, x.AddressLine1+"\n"+x.AddressLine2, x.City, x.State, x.Zip, x.BusinessPhoneNumber, time.Now())
+	_, err = handler.DB.Exec("INSERT INTO `restaurants` (`ownerid`, `name`, `description`, `address`, `city`, `state`, `zip`, `phone-number`, `registration-date` `pickup-time`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", insertedID, x.RestaurantName, x.Description, x.AddressLine1+"\n"+x.AddressLine2, x.City, x.State, x.Zip, x.BusinessPhoneNumber, time.Now(), x.PickupTime)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())

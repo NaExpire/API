@@ -35,7 +35,6 @@ type getRestaurantSchema struct {
 	State         string       `json:"state"`
 	Meals         []mealSchema `json:"meals"`
 	Deals         []dealSchema `json:"deals"`
-	Items         string       `json:"items"`
 }
 
 type updateRestaurantSchema struct {
@@ -46,14 +45,13 @@ type updateRestaurantSchema struct {
 	Address       string `json:"address"`
 	City          string `json:"city"`
 	State         string `json:"state"`
-	Items         string `json:"items"`
 }
 
 func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	x := &getRestaurantSchema{}
 
-	rows, err := handler.DB.Query("SELECT `name`, `phone-number`, `description`, `address`, `city`, `state`, `items`, `pickup-time` FROM restaurants WHERE id=?", vars["restaurantID"])
+	rows, err := handler.DB.Query("SELECT `name`, `phone-number`, `description`, `address`, `city`, `state`, `pickup-time` FROM restaurants WHERE id=?", vars["restaurantID"])
 
 	defer rows.Close()
 
@@ -69,7 +67,7 @@ func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, reques
 		return
 	}
 
-	err = rows.Scan(&x.Name, &x.BusinessPhone, &x.Description, &x.Address, &x.City, &x.State, &x.Items, &x.PickupTime)
+	err = rows.Scan(&x.Name, &x.BusinessPhone, &x.Description, &x.Address, &x.City, &x.State, &x.PickupTime)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -125,7 +123,7 @@ func (handler UpdateRestaurantHandler) ServeHTTP(writer http.ResponseWriter, req
 		return
 	}
 
-	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , `phone-number` = ? , description = ? , address = ? , city = ? , state = ?, `pickup-time` = ?, `items` = ? WHERE id = ?", x.Name, x.BusinessPhone, x.Description, x.Address, x.City, x.State, x.PickupTime, x.Items, vars["restaurantID"])
+	_, err = handler.DB.Exec("UPDATE restaurants SET name = ? , `phone-number` = ? , description = ? , address = ? , city = ? , state = ?, `pickup-time` = ? WHERE id = ?", x.Name, x.BusinessPhone, x.Description, x.Address, x.City, x.State, x.PickupTime, vars["restaurantID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
