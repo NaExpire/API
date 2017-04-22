@@ -63,7 +63,9 @@ Response
 ```
 
 ## Get Restaurant details
-Endpoint: GET /api/business/restaurant/<restaurantID:int>/ <br />
+Endpoint: GET /api/business/restaurant/{restaurantID:int}/ <br />
+
+Request: no request schema necessary <br />
 
 Response
 ```json
@@ -77,7 +79,7 @@ Response
 ```
 
 ## Update Restaurant details
-Endpoint: POST /api/business/restaurant/<restaurantID:int>/update/ <br />
+Endpoint: POST /api/business/restaurant/{restaurantID:int}/update/ <br />
 
 Response
 ```json
@@ -107,8 +109,166 @@ Response
 }
 ```
 
+## Create meal
+Endpoint: POST /api/business/meal/create/
 
-# Consumer Endpoints
+Request:
+```json
+{
+    "name": string,
+    "description": string,
+    "restaurantID": int,
+    "price": double,
+    "type": string
+}
+```
+type is either "menu-item" or "grab-bag"
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Get meal info
+Endpoint: GET /api/business/meal/{mealID:int}/ <br />
+
+Request: no request schema necessary <br />
+
+Response: 
+```json
+{
+    "name": string,
+    "description": string,
+    "restaurantID": int,
+    "price": double,
+    "type": string
+}
+```
+type is either "menu-item" or "grab-bag"
+
+## Update meal info
+Endpoint: PUT /api/business/meal/{mealID:int}/update/ <br />
+
+Request:
+```json
+{
+    "name": string,
+    "description": string,
+    "restaurantID": int,
+    "price": double
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Delete meal
+Endpoint DELETE /api/business/meal/{mealID:int}/delete/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Create deal
+Endpoint: POST /api/business/deal/create/
+
+Request:
+```json
+{
+    "meal-id": int,
+    "deal-price": double,
+    "quantity": int
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Get deal info
+Endpoint: GET /api/business/deal/{dealID:int}/ <br />
+
+Request: no request schema necessary <br />
+
+Response: 
+```json
+{
+    "meal-id": int,
+    "deal-price": double,
+    "quantity": int
+}
+```
+
+## Update deal info
+Endpoint: PUT /api/business/deal/{dealID:int}/update/ <br />
+
+Request:
+```json
+{
+     "meal-id": int,
+    "deal-price": double,
+    "quantity": int
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Delete deal
+Endpoint DELETE /api/business/deal/{dealID:int}/delete/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Accept Transaction
+Endpoint PUT /api/business/transaction/{transactionID:int}/accept/ <br />
+
+Request: Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Reject Transaction 
+Endpoint PUT /api/business/transaction/{transactionID:int}/reject/ <br />
+
+Request: Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+# Consumer Endpoints 
 ## Login
 Endpoint: POST /api/consumer/login/ <br />
 Request:
@@ -181,7 +341,7 @@ Response
 ```
 
 ## Get Restaurant details
-Endpoint: GET /api/consumer/restaurant/<restaurantID:int>/ <br />
+Endpoint: GET /api/consumer/restaurant/{restaurantID:int}/ <br />
 
 Response
 ```json
@@ -191,5 +351,63 @@ Response
 	"address": string,
 	"city": string,
 	"state": string
+}
+```
+
+## Get meal info
+Endpoint: GET /api/consumer/meal/{mealID:int}/ <br />
+
+Request: no request schema necessary <br />
+
+Response: 
+```json
+{
+    "name": string,
+    "description": string,
+    "restaurantID": int,
+    "price": double,
+    "type": string
+}
+```
+type is either "menu-item" or "grab-bag"
+
+## Get deal info
+Endpoint: GET /api/consumer/deal/{dealID:int}/ <br />
+
+Request: no request schema necessary <br />
+
+Response: 
+```json
+{
+    "meal-id": int,
+    "deal-price": double,
+    "quantity": int
+}
+```
+
+## Issue Transaction
+blocked
+
+## Cancel Transaction
+Endpoint PUT /api/consumer/transaction/{transactionID:int}/cancel/ <br />
+
+Request: Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Fulfil Transaction
+Endpoint PUT /api/consumer/transaction/{transactionID:int}/fulfill/ <br />
+
+Request: Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
 }
 ```
