@@ -30,13 +30,14 @@ type mealSchema struct {
 	Description  string  `json:"description"`
 	RestaurantID int     `json:"restaurantId"`
 	Price        float64 `json:"price"`
+	Type         string  `json:"type"`
 }
 
 func (handler GetMealHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	x := &mealSchema{}
 
-	rows, err := handler.DB.Query("SELECT `name`, `description`, `restaurantId`, `price` FROM menuitems WHERE id=?", vars["mealID"])
+	rows, err := handler.DB.Query("SELECT `name`, `description`, `restaurantId`, `price`, `type` FROM menuitems WHERE id=?", vars["mealID"])
 
 	defer rows.Close()
 
@@ -52,7 +53,7 @@ func (handler GetMealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 		return
 	}
 
-	err = rows.Scan(&x.Name, &x.Description, &x.RestaurantID, &x.Price)
+	err = rows.Scan(&x.Name, &x.Description, &x.RestaurantID, &x.Price, &x.Type)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -72,7 +73,7 @@ func (handler UpdateMealHandler) ServeHTTP(writer http.ResponseWriter, request *
 		return
 	}
 
-	_, err = handler.DB.Exec("UPDATE menuitems SET `name` = ? , `description` = ? , `restaurantId` = ?, `price` = ? WHERE id = ?", x.Name, x.Description, x.RestaurantID, x.Price, vars["mealID"])
+	_, err = handler.DB.Exec("UPDATE menuitems SET `name` = ? , `description` = ? , `restaurantId` = ?, `type` = ? , `price` = ? WHERE id = ?", x.Name, x.Description, x.RestaurantID, x.Price, x.Type, vars["mealID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -105,7 +106,7 @@ func (handler AddMealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO menuitems (`name` , `description`, `restaurantId`, `price`) VALUES (? , ? , ?, ?) ", x.Name, x.Description, x.RestaurantID, x.Price)
+	_, err = handler.DB.Exec("INSERT INTO menuitems (`name` , `description`, `restaurantId`, `price`, `type`) VALUES (? , ? , ?, ?, ?) ", x.Name, x.Description, x.RestaurantID, x.Price, x.Type)
 
 	if err != nil {
 		util.WriteErrorJSON(writer, err.Error())
