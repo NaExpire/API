@@ -180,3 +180,12 @@ func (handler UpdateItemsHandler) ServeHTTP(writer http.ResponseWriter, request 
 	}
 	io.WriteString(writer, "{\"ok\": true}")
 }
+
+func canSessionOwnerModifyRestaurant(db *sql.DB, sessionID, restaurantID string) (bool, error) {
+	rows, err := db.Query("SELECT u.`id` FROM `users` AS u INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` INNER JOIN `restaurants` AS r ON r.`ownerid` = u.`id` WHERE s.`session-content` = ? AND r.`id` = ?", sessionID, restaurantID)
+	defer rows.Close()
+	if err != nil {
+		return false, err
+	}
+	return rows.Next(), nil
+}
