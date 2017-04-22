@@ -70,6 +70,8 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Methods("POST")
 	businessRouter.Handle("/deal/{dealID}/delete/", Chain(DeleteDealHandler{DB: db}, AllowCORS())).
 		Methods("DELETE")
+	businessRouter.Handle("/review/{reviewID}/", Chain(GetReviewHandler{DB: db}, AllowCORS(), Authenticate(db, "business"))).
+		Methods("GET")
 }
 
 func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
@@ -90,4 +92,12 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 		Methods("GET")
 	consumerRouter.Handle("/deal/{dealID}/", Chain(GetDealHandler{DB: db}, AllowCORS())).
 		Methods("GET")
+	consumerRouter.Handle("/review/{reviewID}/", Chain(GetReviewHandler{DB: db}, AllowCORS(), Authenticate(db, "consumer"))).
+		Methods("GET")
+	consumerRouter.Handle("/review/create/", Chain(AddReviewHandler{DB: db}, AllowCORS(), Authenticate(db, "consumer"))).
+		Methods("POST")
+	consumerRouter.Handle("/review/{reviewID}/update/", Chain(UpdateReviewHandler{DB: db}, AllowCORS(), Authenticate(db, "consumer"))).
+		Methods("PUT")
+	consumerRouter.Handle("/review/{reviewID}/delete/", Chain(DeleteReviewHandler{DB: db}, AllowCORS(), Authenticate(db, "consumer"))).
+		Methods("DELETE")
 }

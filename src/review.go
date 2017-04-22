@@ -29,17 +29,24 @@ type DeleteReviewHandler struct {
 	DB *sql.DB
 }
 
+type createReviewSchema struct {
+	RestaurantID  int    `json:"restaurantID"`
+	Score         int    `json:"score"`
+	ReviewBody    string `json:"reviewBody"`
+	TransactionID int    `json:"transactionID"`
+}
+
 type reviewSchema struct {
-	RestaurantID int    `json:"restaurant-id"`
+	RestaurantID int    `json:"restaurantID"`
 	Score        int    `json:"score"`
-	ReviewBody   string `json:"review-body"`
+	ReviewBody   string `json:"reviewBody"`
 }
 
 func (handler GetAllReviewsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	x := &reviewSchema{}
 
-	rows, err := handler.DB.Query("SELECT `score` ,`review-body` FROM reviews WHERE restaurant-id=?", vars["restaurantID"])
+	rows, err := handler.DB.Query("SELECT `score` ,`review-body`, `restaurant-id` FROM `reviews` WHERE `restaurant-id` = ?", vars["restaurantID"])
 
 	defer rows.Close()
 
@@ -51,11 +58,11 @@ func (handler GetAllReviewsHandler) ServeHTTP(writer http.ResponseWriter, reques
 
 	if !rows.Next() {
 		writer.WriteHeader(http.StatusNotFound)
-		util.WriteErrorJSON(writer, "Review with restaurantID"+vars["restaurantID"]+"could not be found")
+		util.WriteErrorJSON(writer, "Reviews with restaurantID"+vars["restaurantID"]+"could not be found")
 		return
 	}
 
-	err = rows.Scan(&x.Score, &x.ReviewBody)
+	err = rows.Scan(&x.Score, &x.ReviewBody, &x.RestaurantID)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -69,7 +76,7 @@ func (handler GetReviewHandler) ServeHTTP(writer http.ResponseWriter, request *h
 	vars := mux.Vars(request)
 	x := &reviewSchema{}
 
-	rows, err := handler.DB.Query("SELECT `score` ,`review-body` FROM reviews WHERE id=?", vars["reviewID"])
+	rows, err := handler.DB.Query("SELECT `score`, `review-body`, `restaurant-id` FROM `reviews` WHERE id=?", vars["reviewID"])
 
 	defer rows.Close()
 
@@ -81,11 +88,11 @@ func (handler GetReviewHandler) ServeHTTP(writer http.ResponseWriter, request *h
 
 	if !rows.Next() {
 		writer.WriteHeader(http.StatusNotFound)
-		util.WriteErrorJSON(writer, "Deal with ID "+vars["dealID"]+" could not be found")
+		util.WriteErrorJSON(writer, "Review with ID "+vars["reviewID"]+" could not be found")
 		return
 	}
 
-	err = rows.Scan(&x.Score, &x.ReviewBody)
+	err = rows.Scan(&x.Score, &x.ReviewBody, &x.RestaurantID)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -96,18 +103,43 @@ func (handler GetReviewHandler) ServeHTTP(writer http.ResponseWriter, request *h
 }
 
 func (handler AddReviewHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	x := &reviewSchema{}
-
-	err := util.DecodeJSON(request.Body, x)
+	sessionID := request.Header.Get("session")
+	rows, err := handler.DB.Query("SELECT `user-id` FROM `sessions` WHERE `session-content` = ?", sessionID)
 
 	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO reviews (`score`,`review-body`) VALUES (?, ?) ", x.Score, x.ReviewBody)
+	if !rows.Next() {
+		writer.WriteHeader(http.StatusUnauthorized)
+		util.WriteErrorJSON(writer, "Unauthorized")
+		return
+	}
+
+	var userID int
+	err = rows.Scan(&userID)
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	x := &createReviewSchema{}
+
+	err = util.DecodeJSON(request.Body, x)
 
 	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	_, err = handler.DB.Exec("INSERT INTO reviews (`score`,`review-body`, `restaurant-id`, `transaction-id`, `user-id`) VALUES (?, ?, ?, ?, ?) ", x.Score, x.ReviewBody, x.RestaurantID, x.TransactionID, userID)
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
