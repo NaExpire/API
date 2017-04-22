@@ -105,7 +105,7 @@ func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request 
 	sessionID := request.Header.Get("session")
 
 	var cartID int
-	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` AS u INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
 	defer cartIDRows.Close()
 
 	if err != nil {
@@ -154,7 +154,7 @@ func (handler AddDealCartHandler) ServeHTTP(writer http.ResponseWriter, request 
 	sessionID := request.Header.Get("session")
 
 	var cartID int
-	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` AS u INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
 	defer cartIDRows.Close()
 
 	if err != nil {
@@ -196,7 +196,7 @@ func (handler DeleteMealCartHandler) ServeHTTP(writer http.ResponseWriter, reque
 	sessionID := request.Header.Get("session")
 
 	var cartID int
-	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` AS u INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
 	defer cartIDRows.Close()
 
 	if err != nil {
@@ -231,7 +231,7 @@ func (handler DeleteDealCartHandler) ServeHTTP(writer http.ResponseWriter, reque
 	sessionID := request.Header.Get("session")
 
 	var cartID int
-	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` AS u INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
 	defer cartIDRows.Close()
 
 	if err != nil {
