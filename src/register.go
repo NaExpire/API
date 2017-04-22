@@ -136,18 +136,28 @@ func registerUser(db *sql.DB, email, password, firstName, lastName, userType str
 		return 0, http.StatusInternalServerError, err
 	}
 
+	result, err := db.Exec("INSERT INTO `carts` VALUES ()")
+	if err != nil {
+		return 0, http.StatusInternalServerError, err
+	}
+
+	cartID, err := result.LastInsertId()
+	if err != nil {
+		return 0, http.StatusInternalServerError, err
+	}
+
 	registrationDate := time.Now()
-	result, err := db.Exec("INSERT INTO `users` (`email`, `password`, `firstname`, `lastname`, `type`, `confirmation-code`, `registration-date`) VALUES (?, ?, ?, ?, ?, ?, ?)", email, string(passwordHash), firstName, lastName, userType, confirmationCode, registrationDate)
+	result, err = db.Exec("INSERT INTO `users` (`email`, `password`, `firstname`, `lastname`, `type`, `confirmation-code`, `registration-date`, `cart-id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", email, string(passwordHash), firstName, lastName, userType, confirmationCode, registrationDate, cartID)
 	if err != nil {
 		return 0, http.StatusInternalServerError, err
 	}
 
-	lastID, err := result.LastInsertId()
+	userID, err := result.LastInsertId()
 	if err != nil {
 		return 0, http.StatusInternalServerError, err
 	}
 
-	return lastID, 0, nil
+	return userID, 0, nil
 }
 
 func userWithEmailExists(db *sql.DB, email string) (bool, error) {
