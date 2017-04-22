@@ -35,7 +35,7 @@ Response:
 ```
 
 ## Register
-Endpoint: POST /api/business/register/ <br />
+Endpoint: PUT /api/business/register/ <br />
 Request
 ```json
 {
@@ -51,7 +51,8 @@ Request
     "state": string,
     "zip": string,
     "businessPhoneNumber": string,
-    "description": string
+    "description": string,
+    "pickupTime": string
 }
 ```
 
@@ -77,7 +78,6 @@ Response
     "state": string,
     "pickupTime": string,
     "phoneNumber": string,
-    "items": string,
     "meals": [{
         "name": string,
         "description": string,
@@ -106,8 +106,7 @@ Request
     "city": string,
     "state": string,
     "pickupTime": string,
-    "phoneNumber": string,
-    "items": string
+    "phoneNumber": string
 }
 ```
 
