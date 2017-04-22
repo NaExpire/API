@@ -5,7 +5,7 @@ Endpoint: POST /api/business/login/ <br />
 Request:
 ```json
 {
-    "username": string,
+    "email": string,
     "password": string
 }
 ```
@@ -274,7 +274,7 @@ Endpoint: POST /api/consumer/login/ <br />
 Request:
 ```json
 {
-    "username": string,
+    "email": string,
     "password": string
 }
 ```
