@@ -26,6 +26,7 @@ type DeleteDealHandler struct {
 }
 
 type dealSchema struct {
+	DealID    int     `json:"id"`
 	MealID    int     `json:"meal-id"`
 	DealPrice float64 `json:"deal-price"`
 	Quantity  int     `json:"quantity"`
@@ -35,7 +36,7 @@ func (handler GetDealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 	vars := mux.Vars(request)
 	x := &dealSchema{}
 
-	rows, err := handler.DB.Query("SELECT `meal-id`, `deal-price`, `quantity` FROM deals WHERE id=?", vars["dealID"])
+	rows, err := handler.DB.Query("SELECT `deal-id` ,`meal-id`, `deal-price`, `quantity` FROM deals WHERE id=?", vars["dealID"])
 
 	defer rows.Close()
 
@@ -51,7 +52,7 @@ func (handler GetDealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 		return
 	}
 
-	err = rows.Scan(&x.MealID, &x.DealPrice, &x.Quantity)
+	err = rows.Scan(&x.DealID, &x.MealID, &x.DealPrice, &x.Quantity)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
@@ -71,7 +72,7 @@ func (handler UpdateDealHandler) ServeHTTP(writer http.ResponseWriter, request *
 		return
 	}
 
-	_, err = handler.DB.Exec("UPDATE deals SET `meal-id` = ? , `deal-price` = ? , `quantity` = ? WHERE id = ?", x.MealID, x.DealPrice, x.Quantity, vars["dealID"])
+	_, err = handler.DB.Exec("UPDATE deals SET `deal-id` = ? ,`meal-id` = ? , `deal-price` = ? , `quantity` = ? WHERE id = ?", x.DealID, x.MealID, x.DealPrice, x.Quantity, vars["dealID"])
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -104,7 +105,7 @@ func (handler AddDealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO deals (`meal-id` , `deal-price`, `quantity`) VALUES (? , ? , ?) ", x.MealID, x.DealPrice, x.Quantity)
+	_, err = handler.DB.Exec("INSERT INTO deals (`deal-id`,`meal-id` , `deal-price`, `quantity`) VALUES (?, ? , ? , ?) ", x.DealID, x.MealID, x.DealPrice, x.Quantity)
 
 	if err != nil {
 		util.WriteErrorJSON(writer, err.Error())
