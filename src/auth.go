@@ -46,7 +46,7 @@ func (handler BusinessLoginHandler) ServeHTTP(writer http.ResponseWriter, reques
 		return
 	}
 	if !rows.Next() {
-		writer.WriteHeader(http.statusforb)
+		writer.WriteHeader(http.StatusForbidden)
 		util.WriteErrorJSON(writer, "Invalid username or password")
 		return
 	}
