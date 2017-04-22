@@ -47,6 +47,10 @@ type addMealToCartSchema struct {
 	Quantity int `json:"quantity"`
 }
 
+type addDealToCartSchema struct {
+	DealID int `json:"dealID"`
+}
+
 func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	menuItems := make([]mealSchema, 0)
 	deals := make([]dealSchema, 0)
@@ -140,7 +144,45 @@ func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request 
 }
 
 func (handler AddDealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	var x addDealToCartSchema
+	util.DecodeJSON(request.Body, x)
 
+	sessionID := request.Header.Get("session")
+
+	var cartID int
+	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+	defer cartIDRows.Close()
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if !cartIDRows.Next() {
+		writer.WriteHeader(http.StatusUnauthorized)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	cartIDRows.Scan(&cartID)
+
+	rows, err := handler.DB.Query("SELECT * FROM `carts-deals` WHERE `cart-id` = ? AND `deal-id` = ?", cartID, x.DealID)
+	defer rows.Close()
+
+	if !rows.Next() {
+		_, err = handler.DB.Exec("INSERT INTO `carts-deals` (`cart-id`, `deal-id`) VALUES (?, ?)", cartID, x.DealID)
+	} else {
+		io.WriteString(writer, "Duplicate Deal already in Cart")
+	}
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	io.WriteString(writer, "{\"ok\": true}")
 }
 
 func (handler UpdateQuantityMealHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
