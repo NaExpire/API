@@ -28,7 +28,7 @@ type DeleteMealHandler struct {
 type mealSchema struct {
 	Name         string  `json:"name"`
 	Description  string  `json:"description"`
-	RestaurantID int     `json:"restaurantId"`
+	RestaurantID int     `json:"restaurantID"`
 	Price        float64 `json:"price"`
 	Type         string  `json:"type"`
 }
@@ -77,7 +77,7 @@ func (handler UpdateMealHandler) ServeHTTP(writer http.ResponseWriter, request *
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(writer, err.Error()+"\n")
+		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
 
