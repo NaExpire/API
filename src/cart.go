@@ -86,7 +86,6 @@ func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 	}
 
 	for dealRows.Next() {
-		println("DEAL!")
 		var deal dealSchema
 		dealRows.Scan(&deal.MealID, &deal.DealPrice, &deal.Quantity)
 		deals = append(deals, deal)
@@ -129,11 +128,8 @@ func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request 
 	defer rows.Close()
 
 	if err != nil {
-		println("1)")
 		writer.WriteHeader(http.StatusInternalServerError)
-		println("2)")
 		util.WriteErrorJSON(writer, err.Error())
-		println("3)")
 		return
 	}
 
