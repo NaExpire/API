@@ -49,14 +49,6 @@ type updateRestaurantSchema struct {
 	Items         string `json:"items"`
 }
 
-type itemsSchema struct {
-	Items           string `json:"items"`
-	Price           string `json:"price"`
-	PickupTime      string `json:"pickupTime"`
-	PickupMax       string `json:"pickupMax"`
-	PickupRemaining string `json:"pickupRemaining"`
-}
-
 func (handler GetRestaurantHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	x := &getRestaurantSchema{}

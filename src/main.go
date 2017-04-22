@@ -72,6 +72,10 @@ func initBusinessRouter(parent *mux.Router, db *sql.DB) {
 		Methods("DELETE")
 	businessRouter.Handle("/review/{reviewID}/", Chain(GetReviewHandler{DB: db}, AllowCORS(), Authenticate(db, "business"))).
 		Methods("GET")
+	businessRouter.Handle("/transaction/{transactionID}/accept/", Chain(AcceptTransactionHandler{DB: db}, AllowCORS())).
+		Methods("PUT")
+	businessRouter.Handle("/transaction/{transactionID}/reject/", Chain(RejectTransactionHandler{DB: db}, AllowCORS())).
+		Methods("PUT")
 }
 
 func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
@@ -112,4 +116,10 @@ func initConsumerRotuer(parent *mux.Router, db *sql.DB) {
 		Methods("PUT")
 	consumerRouter.Handle("/review/{reviewID}/delete/", Chain(DeleteReviewHandler{DB: db}, AllowCORS(), Authenticate(db, "consumer"))).
 		Methods("DELETE")
+	//consumerRouter.Handle("/transaction/issue/", Chain(IssueTransactionHandler{DB: db}, AllowCORS())).
+	//Methods("POST")
+	consumerRouter.Handle("/transaction/{transactionID}/cancel/", Chain(CancelTransactionHandler{DB: db}, AllowCORS())).
+		Methods("PUT")
+	consumerRouter.Handle("/transaction/{transactionID}/fulfill/", Chain(FulfillTransactionHandler{DB: db}, AllowCORS())).
+		Methods("PUT")
 }
