@@ -513,3 +513,33 @@ Response:
     "ok": boolean
 }
 ```
+
+## Delete Meal for Cart
+Endpoint DELETE /api/consumer/cart/delete/deal/ <br />
+
+Request: 
+{
+	"mealID": int
+}
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Delete Deal for Cart
+Endpoint DELETE /api/consumer/cart/delete/deal/ <br />
+
+Request: 
+{
+	"dealID": int
+}
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
