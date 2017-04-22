@@ -118,9 +118,11 @@ Request:
     "name": string,
     "description": string,
     "restaurantID": int,
-    "price": double
+    "price": double,
+    "type": string
 }
 ```
+type is either "menu-item" or "grab-bag"
 
 Response:
 ```json
@@ -140,9 +142,11 @@ Response:
     "name": string,
     "description": string,
     "restaurantID": int,
-    "price": double
+    "price": double,
+    "type": string
 }
 ```
+type is either "menu-item" or "grab-bag"
 
 ## Update meal info
 Endpoint: PUT /api/business/meal/<mealID:int>/update/ <br />
@@ -166,6 +170,70 @@ Response:
 
 ## Delete meal
 Endpoint DELETE /api/business/meal/<mealID:int>/delete/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Create deal
+Endpoint: POST /api/business/deal/create/
+
+Request:
+```json
+{
+    "meal-id": int,
+    "deal-price": float64,
+    "quantity": int
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Get deal info
+Endpoint: GET /api/business/deal/<dealID:int>/ <br />
+
+Request: no request schema necessary <br />
+
+Response: 
+```json
+{
+    "meal-id": int,
+    "deal-price": float64,
+    "quantity": int
+}
+```
+
+## Update deal info
+Endpoint: PUT /api/business/deal/<dealID:int>/update/ <br />
+
+Request:
+```json
+{
+     "meal-id": int,
+    "deal-price": float64,
+    "quantity": int
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Delete deal
+Endpoint DELETE /api/business/deal/<dealID:int>/delete/ <br />
 
 Request: no request schema necessary <br />
 
@@ -260,5 +328,36 @@ Response
 	"address": string,
 	"city": string,
 	"state": string
+}
+```
+
+## Get meal info
+Endpoint: GET /api/consumer/meal/<mealID:int>/ <br />
+
+Request: no request schema necessary <br />
+
+Response: 
+```json
+{
+    "name": string,
+    "description": string,
+    "restaurantID": int,
+    "price": double,
+    "type": string
+}
+```
+type is either "menu-item" or "grab-bag"
+
+## Get deal info
+Endpoint: GET /api/consumer/deal/<dealID:int>/ <br />
+
+Request: no request schema necessary <br />
+
+Response: 
+```json
+{
+    "meal-id": int,
+    "deal-price": float64,
+    "quantity": int
 }
 ```
