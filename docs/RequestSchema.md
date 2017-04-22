@@ -63,7 +63,7 @@ Response
 ```
 
 ## Get Restaurant details
-Endpoint: GET /api/business/restaurant/{restaurantID:int}/ <br />
+Endpoint: GET /api/business/restaurant/<restaurantID:int>/ <br />
 
 Request: no request schema necessary <br />
 
@@ -79,7 +79,7 @@ Response
 ```
 
 ## Update Restaurant details
-Endpoint: POST /api/business/restaurant/{restaurantID:int}/update/ <br />
+Endpoint: POST /api/business/restaurant/<restaurantID:int>/update/ <br />
 
 Response
 ```json
@@ -132,7 +132,7 @@ Response:
 ```
 
 ## Get meal info
-Endpoint: GET /api/business/meal/{mealID:int}/ <br />
+Endpoint: GET /api/business/meal/<mealID:int>/ <br />
 
 Request: no request schema necessary <br />
 
@@ -149,7 +149,7 @@ Response:
 type is either "menu-item" or "grab-bag"
 
 ## Update meal info
-Endpoint: PUT /api/business/meal/{mealID:int}/update/ <br />
+Endpoint: PUT /api/business/meal/<mealID:int>/update/ <br />
 
 Request:
 ```json
@@ -169,7 +169,7 @@ Response:
 ```
 
 ## Delete meal
-Endpoint DELETE /api/business/meal/{mealID:int}/delete/ <br />
+Endpoint DELETE /api/business/meal/<mealID:int>/delete/ <br />
 
 Request: no request schema necessary <br />
 
@@ -200,7 +200,7 @@ Response:
 ```
 
 ## Get deal info
-Endpoint: GET /api/business/deal/{dealID:int}/ <br />
+Endpoint: GET /api/business/deal/<dealID:int>/ <br />
 
 Request: no request schema necessary <br />
 
@@ -214,7 +214,7 @@ Response:
 ```
 
 ## Update deal info
-Endpoint: PUT /api/business/deal/{dealID:int}/update/ <br />
+Endpoint: PUT /api/business/deal/<dealID:int>/update/ <br />
 
 Request:
 ```json
@@ -233,7 +233,7 @@ Response:
 ```
 
 ## Delete deal
-Endpoint DELETE /api/business/deal/{dealID:int}/delete/ <br />
+Endpoint DELETE /api/business/deal/<dealID:int>/delete/ <br />
 
 Request: no request schema necessary <br />
 
@@ -245,9 +245,9 @@ Response:
 ```
 
 ## Accept Transaction
-Endpoint PUT /api/business/transaction/{transactionID:int}/accept/ <br />
+Endpoint PUT /api/business/transaction/<transactionID:int>/accept/ <br />
 
-Request: Request: no request schema necessary <br />
+Request: no request schema necessary <br />
 
 Response:
 ```json
@@ -257,9 +257,9 @@ Response:
 ```
 
 ## Reject Transaction 
-Endpoint PUT /api/business/transaction/{transactionID:int}/reject/ <br />
+Endpoint PUT /api/business/transaction/<transactionID:int>/reject/ <br />
 
-Request: Request: no request schema necessary <br />
+Request: no request schema necessary <br />
 
 Response:
 ```json
@@ -341,7 +341,7 @@ Response
 ```
 
 ## Get Restaurant details
-Endpoint: GET /api/consumer/restaurant/{restaurantID:int}/ <br />
+Endpoint: GET /api/consumer/restaurant/<restaurantID:int>/ <br />
 
 Response
 ```json
@@ -355,7 +355,7 @@ Response
 ```
 
 ## Get meal info
-Endpoint: GET /api/consumer/meal/{mealID:int}/ <br />
+Endpoint: GET /api/consumer/meal/<mealID:int>/ <br />
 
 Request: no request schema necessary <br />
 
@@ -372,7 +372,7 @@ Response:
 type is either "menu-item" or "grab-bag"
 
 ## Get deal info
-Endpoint: GET /api/consumer/deal/{dealID:int}/ <br />
+Endpoint: GET /api/consumer/deal/<dealID:int>/ <br />
 
 Request: no request schema necessary <br />
 
@@ -389,9 +389,9 @@ Response:
 blocked
 
 ## Cancel Transaction
-Endpoint PUT /api/consumer/transaction/{transactionID:int}/cancel/ <br />
+Endpoint PUT /api/consumer/transaction/<transactionID:int>/cancel/ <br />
 
-Request: Request: no request schema necessary <br />
+Request: no request schema necessary <br />
 
 Response:
 ```json
@@ -401,13 +401,44 @@ Response:
 ```
 
 ## Fulfil Transaction
-Endpoint PUT /api/consumer/transaction/{transactionID:int}/fulfill/ <br />
+Endpoint PUT /api/consumer/transaction/<transactionID:int>/fulfill/ <br />
 
-Request: Request: no request schema necessary <br />
+Request: no request schema necessary <br />
 
 Response:
 ```json
 {
     "ok": boolean
+}
+```
+
+## Get Cart
+Endpoint GET /api/consumer/cart/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "menuitems": [
+        ...
+        {
+            "name": string,
+            "description": string,
+            "restaurantID": int,
+            "price": double,
+            "type": string
+        },
+        ...
+    ],
+    "deals": [
+        ...
+        {
+            "meal-id": int,
+            "deal-price": double,
+            "quantity": int
+        },
+        ...
+    ]
 }
 ```
