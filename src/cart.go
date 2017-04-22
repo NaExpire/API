@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"net/http"
 
+	"io"
+
 	"github.com/NAExpire/API/src/util"
 )
 
@@ -81,7 +83,6 @@ func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 	cart.Deals = deals
 
 	util.EncodeJSON(writer, cart)
-
 }
 
 func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -101,7 +102,25 @@ func (handler DeleteMealCartHandler) ServeHTTP(writer http.ResponseWriter, reque
 }
 
 func (handler DeleteCartContentsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	sessionID := request.Header.Get("session")
 
+	_, err := handler.DB.Query("DELETE c FROM `carts-menuitems` AS c INNER JOIN `users` AS u ON u.`cart-id` = c.`cart-id` INNER JOIN `sessions` AS s ON s.`user-id` = u.id WHERE s.`session-content` = ?", sessionID)
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	_, err = handler.DB.Query("DELETE c FROM `carts-deals` AS c INNER JOIN `users` AS u ON u.`cart-id` = c.`cart-id` INNER JOIN `sessions` AS s ON s.`user-id` = u.id WHERE s.`session-content` = ?", sessionID)
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	io.WriteString(writer, "{\"ok\": true}")
 }
 
 func (handler DeleteDealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
