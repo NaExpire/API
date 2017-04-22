@@ -46,7 +46,7 @@ func (handler BusinessLoginHandler) ServeHTTP(writer http.ResponseWriter, reques
 		return
 	}
 	if !rows.Next() {
-		writer.WriteHeader(http.StatusUnauthorized)
+		writer.WriteHeader(http.statusforb)
 		util.WriteErrorJSON(writer, "Invalid username or password")
 		return
 	}
@@ -61,7 +61,7 @@ func (handler BusinessLoginHandler) ServeHTTP(writer http.ResponseWriter, reques
 		util.WriteErrorJSON(writer, err.Error())
 		return
 	} else if confirmed == 0 {
-		writer.WriteHeader(http.StatusUnauthorized)
+		writer.WriteHeader(http.StatusForbidden)
 		util.WriteErrorJSON(writer, "Account not confirmed.")
 		return
 	}
@@ -116,7 +116,7 @@ func (handler ConsumerLoginHandler) ServeHTTP(writer http.ResponseWriter, reques
 		util.WriteErrorJSON(writer, err.Error())
 		return
 	} else if confirmed == 0 {
-		writer.WriteHeader(http.StatusUnauthorized)
+		writer.WriteHeader(http.StatusForbidden)
 		util.WriteErrorJSON(writer, "Account not confirmed.")
 		return
 	}
