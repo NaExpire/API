@@ -9,6 +9,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+type GetAllReviewsHandler struct {
+	DB *sql.DB
+}
+
 type GetReviewHandler struct {
 	DB *sql.DB
 }
@@ -26,15 +30,46 @@ type DeleteReviewHandler struct {
 }
 
 type reviewSchema struct {
-	Score      int    `json:"score"`
-	ReviewBody string `json:"review-body"`
+	RestaurantID int    `json:"restaurant-id"`
+	Score        int    `json:"score"`
+	ReviewBody   string `json:"review-body"`
+}
+
+func (handler GetAllReviewsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	vars := mux.Vars(request)
+	x := &reviewSchema{}
+
+	rows, err := handler.DB.Query("SELECT `score` ,`review-body` FROM reviews WHERE restaurant-id=?", vars["restaurantID"])
+
+	defer rows.Close()
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if !rows.Next() {
+		writer.WriteHeader(http.StatusNotFound)
+		util.WriteErrorJSON(writer, "Review with restaurantID"+vars["restaurantID"]+"could not be found")
+		return
+	}
+
+	err = rows.Scan(&x.Score, &x.ReviewBody)
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	util.EncodeJSON(writer, x)
 }
 
 func (handler GetReviewHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
 	x := &reviewSchema{}
 
-	rows, err := handler.DB.Query("SELECT `score` ,`review-body`, `quantity` FROM reviews WHERE id=?", vars["reviewID"])
+	rows, err := handler.DB.Query("SELECT `score` ,`review-body` FROM reviews WHERE id=?", vars["reviewID"])
 
 	defer rows.Close()
 
