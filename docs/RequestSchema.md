@@ -70,11 +70,27 @@ Request: no request schema necessary <br />
 Response
 ```json
 {
-	"name": string,
-	"description": string,
-	"address": string,
-	"city": string,
-	"state": string
+    "name": string,
+    "description": string,
+    "address": string,
+    "city": string,
+    "state": string,
+    "pickupTime": string,
+    "phoneNumber": string,
+    "items": string,
+    "meals": [{
+        "name": string,
+        "description": string,
+        "restaurantID": int,
+        "price": double,
+        "type": string
+    }],
+    "deals": [{
+        "mealID": int,
+        "dealPrice": double,
+        "quantity": int,
+        "restaurantID": int
+    }]
 }
 ```
 
@@ -84,11 +100,14 @@ Endpoint: POST /api/business/restaurant/<restaurantID:int>/update/ <br />
 Response
 ```json
 {
-	"name": string,
-	"description": string,
-	"address": string,
-	"city": string,
-	"state": string
+    "name": string,
+    "description": string,
+    "address": string,
+    "city": string,
+    "state": string,
+    "pickupTime": string,
+    "phoneNumber": string,
+    "items": string
 }
 ```
 
@@ -347,11 +366,11 @@ Endpoint: GET /api/consumer/restaurant/<restaurantID:int>/ <br />
 Response
 ```json
 {
-	"name": string,
-	"description": string,
-	"address": string,
-	"city": string,
-	"state": string
+    "name": string,
+    "description": string,
+    "address": string,
+    "city": string,
+    "state": string
 }
 ```
 
@@ -451,8 +470,8 @@ Endpoint POST /api/consumer/cart/add/meal/ <br />
 Request:
 ```json
 {
-	"mealID": int,
-	"quantity": int
+    "mealID": int,
+    "quantity": int
 }
 ```
 
@@ -469,7 +488,7 @@ Endpoint POST /api/consumer/cart/add/deal/ <br />
 Request:
 ```json
 {
-	"dealID": int
+    "dealID": int
 }
 ```
 
@@ -521,7 +540,7 @@ Endpoint DELETE /api/consumer/cart/delete/deal/ <br />
 
 Request: 
 {
-	"mealID": int
+    "mealID": int
 }
 
 Response:
@@ -536,7 +555,7 @@ Endpoint DELETE /api/consumer/cart/delete/deal/ <br />
 
 Request: 
 {
-	"dealID": int
+    "dealID": int
 }
 
 Response:

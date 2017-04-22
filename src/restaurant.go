@@ -27,8 +27,8 @@ type UpdateItemsHandler struct {
 
 type getRestaurantSchema struct {
 	Name          string       `json:"name"`
-	BusinessPhone string       `json:"phone-number"`
-	PickupTime    string       `json:"pickup-time"`
+	BusinessPhone string       `json:"phoneNumber"`
+	PickupTime    string       `json:"pickupTime"`
 	Description   string       `json:"description"`
 	Address       string       `json:"address"`
 	City          string       `json:"city"`
@@ -39,16 +39,14 @@ type getRestaurantSchema struct {
 }
 
 type updateRestaurantSchema struct {
-	Name          string       `json:"name"`
-	BusinessPhone string       `json:"phone-number"`
-	PickupTime    string       `json:"pickup-time"`
-	Description   string       `json:"description"`
-	Address       string       `json:"address"`
-	City          string       `json:"city"`
-	State         string       `json:"state"`
-	Meals         []mealSchema `json:"meals"`
-	Deals         []dealSchema `json:"deals"`
-	Items         string       `json:"items"`
+	Name          string `json:"name"`
+	BusinessPhone string `json:"phoneNumber"`
+	PickupTime    string `json:"pickupTime"`
+	Description   string `json:"description"`
+	Address       string `json:"address"`
+	City          string `json:"city"`
+	State         string `json:"state"`
+	Items         string `json:"items"`
 }
 
 type itemsSchema struct {
