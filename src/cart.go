@@ -42,6 +42,11 @@ type cartSchema struct {
 	Deals     []dealSchema `json:"deals"`
 }
 
+type addMealToCartSchema struct {
+	MealID   int `json:"mealID"`
+	Quantity int `json:"quantity"`
+}
+
 func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	menuItems := make([]mealSchema, 0)
 	deals := make([]dealSchema, 0)
@@ -86,7 +91,52 @@ func (handler GetCartHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 }
 
 func (handler AddMealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	var x addMealToCartSchema
+	util.DecodeJSON(request.Body, x)
 
+	sessionID := request.Header.Get("session")
+
+	var cartID int
+	cartIDRows, err := handler.DB.Query("SELECT `cart-id` FROM `users` INNER JOIN `sessions` AS s ON s.`user-id` = u.`id` WHERE s.`session-content` = ?", sessionID)
+	defer cartIDRows.Close()
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	if !cartIDRows.Next() {
+		writer.WriteHeader(http.StatusUnauthorized)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	cartIDRows.Scan(&cartID)
+
+	rows, err := handler.DB.Query("SELECT `quantity` FROM `carts-menuitems` WHERE `cart-id` = ? AND `menuitems-id` = ?", cartID, x.MealID)
+	defer rows.Close()
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	// Item not in the cart already
+	if !rows.Next() {
+		_, err = handler.DB.Exec("INSERT INTO `carts-menuitems` (`cart-id`, `menuitem-id`, `quantity`) VALUES (?, ?, ?)", cartID, x.MealID, x.Quantity)
+	} else {
+		_, err = handler.DB.Exec("UPDATE `carts-menuitems` SET `quantity` = ? WHERE `menuitem-id` = ? AND `cart-id` = ?", x.MealID, cartID)
+	}
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	io.WriteString(writer, "{\"ok\": true}")
 }
 
 func (handler AddDealCartHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
@@ -104,7 +154,8 @@ func (handler DeleteMealCartHandler) ServeHTTP(writer http.ResponseWriter, reque
 func (handler DeleteCartContentsHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	sessionID := request.Header.Get("session")
 
-	_, err := handler.DB.Query("DELETE c FROM `carts-menuitems` AS c INNER JOIN `users` AS u ON u.`cart-id` = c.`cart-id` INNER JOIN `sessions` AS s ON s.`user-id` = u.id WHERE s.`session-content` = ?", sessionID)
+	mealRows, err := handler.DB.Query("DELETE c FROM `carts-menuitems` AS c INNER JOIN `users` AS u ON u.`cart-id` = c.`cart-id` INNER JOIN `sessions` AS s ON s.`user-id` = u.id WHERE s.`session-content` = ?", sessionID)
+	defer mealRows.Close()
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
@@ -112,7 +163,8 @@ func (handler DeleteCartContentsHandler) ServeHTTP(writer http.ResponseWriter, r
 		return
 	}
 
-	_, err = handler.DB.Query("DELETE c FROM `carts-deals` AS c INNER JOIN `users` AS u ON u.`cart-id` = c.`cart-id` INNER JOIN `sessions` AS s ON s.`user-id` = u.id WHERE s.`session-content` = ?", sessionID)
+	dealRows, err := handler.DB.Query("DELETE c FROM `carts-deals` AS c INNER JOIN `users` AS u ON u.`cart-id` = c.`cart-id` INNER JOIN `sessions` AS s ON s.`user-id` = u.id WHERE s.`session-content` = ?", sessionID)
+	defer dealRows.Close()
 
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
