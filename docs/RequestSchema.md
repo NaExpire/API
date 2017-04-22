@@ -97,7 +97,7 @@ Response
 ## Update Restaurant details
 Endpoint: POST /api/business/restaurant/<restaurantID:int>/update/ <br />
 
-Response
+Request
 ```json
 {
     "name": string,
@@ -110,6 +110,12 @@ Response
     "items": string
 }
 ```
+
+Response 
+```json
+{
+    "ok": boolean
+}
 
 ## Confirm Registration
 Endpoint: POST /api/business/register/confirm/ <br />
