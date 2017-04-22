@@ -296,6 +296,18 @@ Response:
 }
 ```
 
+## Get Review
+Endpoint GET /review/<reviewID:int>/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+	"restaurantID": int
+	"score": int
+	"reviewBody": string
+```
+
 # Consumer Endpoints 
 ## Login
 Endpoint: POST /api/consumer/login/ <br />
@@ -572,3 +584,66 @@ Response:
     "ok": boolean
 }
 ```
+
+## Get Review
+Endpoint GET /review/<reviewID:int>/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+	"restaurantID": int,
+	"score": int,
+	"reviewBody": string
+}
+```
+
+## Create Review
+Endpoint POST /review/create/ <br />
+
+Request:
+```json
+{
+	"restaurantID": int,
+	"score": int,
+	"reviewBody": string
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Update Review
+Endpoint PUT /review/<reviewID:int>/update/ <br />
+
+Request: 
+```json
+{
+	"restaurantID": int,
+	"score": int,
+	"reviewBody": string
+}
+```
+
+Response:
+```json
+{
+    "ok": boolean
+}
+```
+
+## Delete Review
+Endpoint DELETE /review/<reviewID:int>/delete/ <br />
+
+Request: no request schema necessary <br />
+
+Response:
+```json
+{
+    "ok": boolean
+}
