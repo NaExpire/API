@@ -152,7 +152,8 @@ type is either "menu-item" or "grab-bag"
 Response:
 ```json
 {
-    "ok": boolean
+    "ok": boolean,
+    "id": int
 }
 ```
 

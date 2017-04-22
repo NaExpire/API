@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"io"
 	"net/http"
+	"strconv"
 
 	"github.com/NAExpire/API/src/util"
 	"github.com/gorilla/mux"
@@ -107,12 +108,21 @@ func (handler AddMealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 		return
 	}
 
-	_, err = handler.DB.Exec("INSERT INTO menuitems (`name`, `description`, `restaurantid`, `price`, `type`) VALUES (?, ?, ?, ?, ?)", x.Name, x.Description, x.RestaurantID, x.Price, x.Type)
+	result, err := handler.DB.Exec("INSERT INTO menuitems (`name`, `description`, `restaurantid`, `price`, `type`) VALUES (?, ?, ?, ?, ?)", x.Name, x.Description, x.RestaurantID, x.Price, x.Type)
 
 	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
 		return
 	}
 
-	io.WriteString(writer, "{\"ok\": true}")
+	insertedID, err := result.LastInsertId()
+
+	if err != nil {
+		writer.WriteHeader(http.StatusInternalServerError)
+		util.WriteErrorJSON(writer, err.Error())
+		return
+	}
+
+	io.WriteString(writer, "{\"ok\": true, \"id\":"+strconv.FormatInt(insertedID, 10)+"}")
 }
