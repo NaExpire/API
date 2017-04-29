@@ -240,7 +240,10 @@ Response:
     "mealID": int,
     "dealPrice": double,
     "quantity": int,
-    "restaurantID": int
+    "restaurantID": int,
+    "itemName": string,
+    "restaurantName": string,
+    "restaurantAddress": string
 }
 ```
 
@@ -424,7 +427,10 @@ Response:
     "mealID": int,
     "dealPrice": double,
     "quantity": int,
-    "restaurantID": int
+    "restaurantID": int,
+    "itemName": string,
+    "restaurantName": string,
+    "restaurantAddress": string
 }
 ```
 
