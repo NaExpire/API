@@ -26,6 +26,17 @@ type DeleteDealHandler struct {
 	DB *sql.DB
 }
 
+type getDealSchema struct {
+	DealID            int     `json:"id"`
+	MealID            int     `json:"mealID"`
+	DealPrice         float64 `json:"dealPrice"`
+	Quantity          int     `json:"quantity"`
+	RestaurantID      int     `json:"restaurantID"`
+	ItemName          string  `json:"itemName"`
+	RestaurantName    string  `json:"restaurantName"`
+	RestaurantAddress string  `json:"restaurantAddress"`
+}
+
 type dealSchema struct {
 	DealID       int     `json:"id"`
 	MealID       int     `json:"mealID"`
@@ -36,9 +47,9 @@ type dealSchema struct {
 
 func (handler GetDealHandler) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
 	vars := mux.Vars(request)
-	x := &dealSchema{}
+	x := &getDealSchema{}
 
-	rows, err := handler.DB.Query("SELECT `id`, `meal-id`, `deal-price`, `quantity`, `restaurant-id` FROM deals WHERE id=?", vars["dealID"])
+	rows, err := handler.DB.Query("SELECT d.`id`, d.`meal-id`, d.`deal-price`, d.`quantity`, d.`restaurant-id`, m.`name`, r.`name`, r.`address` FROM deals as d INNER JOIN `restaurants` as r ON r.`id` = d.`restaurant-id` INNER JOIN `menuitems` as m ON m.`id` = d.`meal-id` WHERE d.`id`=?", vars["dealID"])
 
 	defer rows.Close()
 
@@ -54,7 +65,7 @@ func (handler GetDealHandler) ServeHTTP(writer http.ResponseWriter, request *htt
 		return
 	}
 
-	err = rows.Scan(&x.DealID, &x.MealID, &x.DealPrice, &x.Quantity, &x.RestaurantID)
+	err = rows.Scan(&x.DealID, &x.MealID, &x.DealPrice, &x.Quantity, &x.RestaurantID, &x.ItemName, &x.RestaurantName, &x.RestaurantAddress)
 	if err != nil {
 		writer.WriteHeader(http.StatusInternalServerError)
 		util.WriteErrorJSON(writer, err.Error())
