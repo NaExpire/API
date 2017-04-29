@@ -1,3 +1,5 @@
+(Replace anything in {} with the actual numeric ID of the resource)
+
 # Business Endpoints
 
 ## Login
@@ -64,7 +66,7 @@ Response
 ```
 
 ## Get Restaurant details
-Endpoint: GET /api/business/restaurant/<restaurantID:int>/ <br />
+Endpoint: GET /api/business/{restaurantID}/ <br />
 
 Request: no request schema necessary <br />
 
@@ -115,6 +117,7 @@ Response
 {
     "ok": boolean
 }
+```
 
 ## Confirm Registration
 Endpoint: POST /api/business/register/confirm/ <br />
@@ -157,7 +160,7 @@ Response:
 ```
 
 ## Get meal info
-Endpoint: GET /api/business/meal/<mealID:int>/ <br />
+Endpoint: GET /api/business/meal/{mealID}/ <br />
 
 Request: no request schema necessary <br />
 
@@ -174,7 +177,7 @@ Response:
 type is either "menu-item" or "grab-bag"
 
 ## Update meal info
-Endpoint: PUT /api/business/meal/<mealID:int>/update/ <br />
+Endpoint: PUT /api/business/meal/{mealID}/update/ <br />
 
 Request:
 ```json
@@ -194,7 +197,7 @@ Response:
 ```
 
 ## Delete meal
-Endpoint DELETE /api/business/meal/<mealID:int>/delete/ <br />
+Endpoint DELETE /api/business/meal/{mealID}/delete/ <br />
 
 Request: no request schema necessary <br />
 
@@ -212,7 +215,7 @@ Request:
 ```json
 {
     "mealID": int,
-    "deal-price": double,
+    "dealPrice": double,
     "quantity": int,
     "restaurantID": int
 }
@@ -227,7 +230,7 @@ Response:
 ```
 
 ## Get deal info
-Endpoint: GET /api/business/deal/<dealID:int>/ <br />
+Endpoint: GET /api/business/deal/{dealID}/ <br />
 
 Request: no request schema necessary <br />
 
@@ -242,7 +245,7 @@ Response:
 ```
 
 ## Update deal info
-Endpoint: PUT /api/business/deal/<dealID:int>/update/ <br />
+Endpoint: PUT /api/business/deal/{dealID}/update/ <br />
 
 Request:
 ```json
@@ -260,7 +263,7 @@ Response:
 ```
 
 ## Delete deal
-Endpoint DELETE /api/business/deal/<dealID:int>/delete/ <br />
+Endpoint DELETE /api/business/deal/{dealID}/delete/ <br />
 
 Request: no request schema necessary <br />
 
@@ -272,7 +275,7 @@ Response:
 ```
 
 ## Accept Transaction
-Endpoint PUT /api/business/transaction/<transactionID:int>/accept/ <br />
+Endpoint PUT /api/business/transaction/{transactionID}/accept/ <br />
 
 Request: no request schema necessary <br />
 
@@ -284,7 +287,7 @@ Response:
 ```
 
 ## Reject Transaction 
-Endpoint PUT /api/business/transaction/<transactionID:int>/reject/ <br />
+Endpoint PUT /api/business/transaction/{transactionID}/reject/ <br />
 
 Request: no request schema necessary <br />
 
@@ -296,7 +299,7 @@ Response:
 ```
 
 ## Get Review
-Endpoint GET /review/<reviewID:int>/ <br />
+Endpoint GET /review/{reviewID}/ <br />
 
 Request: no request schema necessary <br />
 
@@ -380,7 +383,7 @@ Response
 ```
 
 ## Get Restaurant details
-Endpoint: GET /api/consumer/restaurant/<restaurantID:int>/ <br />
+Endpoint: GET /api/consumer/restaurant/{restaurantID}/ <br />
 
 Response
 ```json
@@ -394,7 +397,7 @@ Response
 ```
 
 ## Get meal info
-Endpoint: GET /api/consumer/meal/<mealID:int>/ <br />
+Endpoint: GET /api/consumer/meal/{mealID}/ <br />
 
 Request: no request schema necessary <br />
 
@@ -411,7 +414,7 @@ Response:
 type is either "menu-item" or "grab-bag"
 
 ## Get deal info
-Endpoint: GET /api/consumer/deal/<dealID:int>/ <br />
+Endpoint: GET /api/consumer/deal/{dealID}/ <br />
 
 Request: no request schema necessary <br />
 
@@ -429,7 +432,7 @@ Response:
 blocked
 
 ## Cancel Transaction
-Endpoint PUT /api/consumer/transaction/<transactionID:int>/cancel/ <br />
+Endpoint PUT /api/consumer/transaction/{transactionID}/cancel/ <br />
 
 Request: no request schema necessary <br />
 
@@ -441,7 +444,7 @@ Response:
 ```
 
 ## Fulfil Transaction
-Endpoint PUT /api/consumer/transaction/<transactionID:int>/fulfill/ <br />
+Endpoint PUT /api/consumer/transaction/{transactionID}/fulfill/ <br />
 
 Request: no request schema necessary <br />
 
@@ -585,7 +588,7 @@ Response:
 ```
 
 ## Get Review
-Endpoint GET /review/<reviewID:int>/ <br />
+Endpoint GET /review/{reviewID}/ <br />
 
 Request: no request schema necessary <br />
 
@@ -618,7 +621,7 @@ Response:
 ```
 
 ## Update Review
-Endpoint PUT /review/<reviewID:int>/update/ <br />
+Endpoint PUT /review/{reviewID}/update/ <br />
 
 Request: 
 ```json
@@ -637,7 +640,7 @@ Response:
 ```
 
 ## Delete Review
-Endpoint DELETE /review/<reviewID:int>/delete/ <br />
+Endpoint DELETE /review/{reviewID}/delete/ <br />
 
 Request: no request schema necessary <br />
 
