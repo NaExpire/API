@@ -6,6 +6,8 @@ import (
 	"math/rand"
 	"net/http"
 	"net/mail"
+	"net/smtp"
+	"strconv"
 	"time"
 
 	"errors"
@@ -60,6 +62,7 @@ func (handler ConsumerRegistrationHandler) ServeHTTP(writer http.ResponseWriter,
 		return
 	}
 
+	confirmationCode := randomConfirmationCode()
 	responseCode, err := validateCredentials(handler.DB, x.Email, x.Password, x.PersonalPhoneNumber)
 	if err != nil {
 		writer.WriteHeader(responseCode)
@@ -67,7 +70,6 @@ func (handler ConsumerRegistrationHandler) ServeHTTP(writer http.ResponseWriter,
 		return
 	}
 
-	confirmationCode := randomConfirmationCode()
 	_, responseCode, err = registerUser(handler.DB, x.Email, x.Password, x.FirstName, x.LastName, "customer", confirmationCode)
 	if err != nil {
 		writer.WriteHeader(responseCode)
@@ -124,7 +126,7 @@ func validateCredentials(db *sql.DB, email string, password string, phoneNumber 
 		return http.StatusUnprocessableEntity, errors.New("Password does not pass validation")
 	} else if !validatePhoneNumber(phoneNumber) {
 		return http.StatusUnprocessableEntity, errors.New("Phone number does not pass validation")
-	} else if !validateEmail(email) {
+	} else if !validateEmailAddress(email) {
 		return http.StatusUnprocessableEntity, errors.New("Email does not pass valdiation")
 	}
 	return 0, nil
@@ -151,6 +153,8 @@ func registerUser(db *sql.DB, email, password, firstName, lastName, userType str
 	if err != nil {
 		return 0, http.StatusInternalServerError, err
 	}
+
+	sendConfirmationEmail(email, confirmationCode)
 
 	userID, err := result.LastInsertId()
 	if err != nil {
@@ -182,19 +186,23 @@ func validatePhoneNumber(phoneNumber string) bool {
 	return true
 }
 
-func validateEmail(email string) bool {
+func validateEmailAddress(email string) bool {
 	_, err := mail.ParseAddress(email)
 	if err != nil {
 		return false
 	}
-	// auth := smtp.PlainAuth("", senderEmail, senderPassword, "smtp.gmail.com")
-	// msg := "From: " + senderEmail + "\n" +
-	// 	"To: " + email + "\n" +
-	// 	"Subject: NAExpire Registration\n\n" +
-	// 	"Hello! Your confirmation code is " + strconv.Itoa(confirmationCode) + "."
-	// err = smtp.SendMail(smtpHost+":"+strconv.Itoa(smtpPort), auth, senderEmail, []string{email}, []byte(msg))
-	// if err != nil {
-	// 	return true, err
-	// }
 	return true
+}
+
+func sendConfirmationEmail(email string, confirmationCode int) error {
+	auth := smtp.PlainAuth("", senderEmail, senderPassword, "smtp.gmail.com")
+	msg := "From: " + senderEmail + "\n" +
+		"To: " + email + "\n" +
+		"Subject: NAExpire Registration\n\n" +
+		"Hello! Your confirmation code is " + strconv.Itoa(confirmationCode) + "."
+	err := smtp.SendMail(smtpHost+":"+strconv.Itoa(smtpPort), auth, senderEmail, []string{email}, []byte(msg))
+	if err != nil {
+		return err
+	}
+	return nil
 }
